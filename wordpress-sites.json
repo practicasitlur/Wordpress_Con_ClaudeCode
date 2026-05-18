@@ -1,0 +1,13 @@
+{
+  "sites": [
+    {
+      "name": "Locopolo Fork",
+      "url": "https://locopolostg.wpenginepowered.com/",
+      "credentials": {
+        "username": "idoia",
+        "application_password": "Yzod AsFG nEbz NXwJ 9CX2 PC1P"
+      },
+      "builder": "Gutenberg"
+    }
+  ]
+}

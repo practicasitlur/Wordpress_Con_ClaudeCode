@@ -1,0 +1,217 @@
+========================================
+CONFIGURACIÓN INICIAL: CONEXIÓN API WORDPRESS CON CLAUDE CODE
+========================================
+
+Pasos seguidos para conectar Claude Code con la API de WordPress:
+
+1. CREAR APPLICATION PASSWORD EN WORDPRESS
+   - Entrar al panel de administración (/wp-admin)
+   - Ir a Usuarios → Perfil del usuario administrador
+   - Bajar hasta la sección "Application Passwords"
+   - Escribir un nombre descriptivo (ej. "Claude Code") y pulsar "Add New Application Password"
+   - WordPress genera una contraseña de 24 caracteres con espacios. Copiarla en ese momento (no se puede volver a ver)
+
+2. GUARDAR CREDENCIALES EN EL PROYECTO
+   - Se creó wordpress-sites.json en la raíz del proyecto con:
+     - URL: https://locopolostg.wpenginepowered.com/
+     - Username: idoia  (nombre de LOGIN, no el display name "Idoia Aranzeta")
+     - Application Password: Yzod AsFG nEbz NXwJ 9CX2 PC1P
+
+3. MÉTODO DE AUTENTICACIÓN
+   - La API usa HTTP Basic Auth con username + application password
+   - Se codifica en Base64 y se envía en la cabecera Authorization
+   - Endpoint de verificación: /wp-json/wp/v2/users/me
+
+4. VERIFICACIÓN
+   - La conexión devolvió correctamente: usuario ID 4, nombre "Idoia Aranzeta"
+   - Sitio operativo y con permisos de lectura y escritura confirmados
+
+========================================
+
+========================================
+1. FECHA Y HORA: 2026-05-18 (sesión inicial)
+2. PREGUNTA / ORDEN RECIBIDA:
+   "Haz un pequeño cambio para comprobar que funciona correctamente. Quita el logo de WhatsApp que aparece siempre."
+3. CAMBIOS REALIZADOS:
+   - Se identificó que el botón de WhatsApp estaba en el widget "block-9" dentro del sidebar "Link fijos a la derecha" (fixed-right).
+   - El widget contenía un bloque de enlace social de WhatsApp apuntando a: https://wa.me/34661344677
+   - Se movió el widget block-9 al sidebar "wp_inactive_widgets" (widgets inactivos) mediante la WordPress REST API.
+   - El botón de WhatsApp dejó de mostrarse en el sitio. El cambio es reversible: el widget sigue existiendo en estado inactivo.
+========================================
+
+========================================
+1. FECHA Y HORA: 2026-05-18
+2. PREGUNTA / ORDEN RECIBIDA:
+   "Crea un CLAUDE.md donde tenga instrucciones que tienes que cumplir cada vez que te pregunte sobre la página web de WordPress. Con reglas de documentación diaria y reglas de trabajo con WordPress."
+3. CAMBIOS REALIZADOS:
+   - Se creó el archivo CLAUDE.md en la raíz del proyecto con las reglas de documentación y las reglas de trabajo con WordPress.
+   - Se creó la carpeta documentacion/ en la raíz del proyecto.
+   - Se creó este archivo 2026-05-18.txt como primer registro de documentación diaria.
+   - No se realizó ningún cambio en el sitio WordPress.
+========================================
+
+========================================
+1. FECHA Y HORA: 2026-05-18
+2. PREGUNTA / ORDEN RECIBIDA:
+   "Quiero que pongas el logo de WhatsApp como estaba antes."
+3. CAMBIOS REALIZADOS:
+   - Se restauró el widget block-9 (botón WhatsApp → https://wa.me/34661344677) moviéndolo de "wp_inactive_widgets" de vuelta al sidebar "Link fijos a la derecha" (fixed-right).
+   - El botón de WhatsApp vuelve a mostrarse en el sitio tal como estaba originalmente.
+========================================
+
+========================================
+1. FECHA Y HORA: 2026-05-18
+2. PREGUNTA / ORDEN RECIBIDA:
+   Crear un nuevo menú "POR SECTORES" con cuatro submenús (Caterings, Distribuidoras de alimentación, Lanzamientos de marca, Retail) en el menú principal del sitio, con el mismo aspecto desplegable que los menús actuales. Las páginas deben quedar vacías de momento.
+3. CAMBIOS REALIZADOS:
+   - Se crearon 4 páginas vacías y publicadas en WordPress:
+       · Caterings (ID: 4009) → /caterings/
+       · Distribuidoras de alimentación (ID: 4012) → /distribuidoras-de-alimentacion/
+       · Lanzamientos de marca (ID: 4010) → /lanzamientos-de-marca/
+       · Retail (ID: 4011) → /retail/
+   - Se añadió al Menú principal (ID: 3) un nuevo ítem de nivel superior llamado "POR SECTORES" (ID: 4013, URL: #, posición 14), al final del menú.
+   - Se añadieron 4 ítems de submenú hijos de "POR SECTORES":
+       · Caterings (ID: 4014, posición 15)
+       · Distribuidoras de alimentación (ID: 4015, posición 16)
+       · Lanzamientos de marca (ID: 4016, posición 17)
+       · Retail (ID: 4017, posición 18)
+   - La estructura es idéntica a la del menú "Monta tu LOCOPOLO" (ítem padre con # + submenús hijos).
+   - Las páginas están vacías; el contenido se añadirá en un paso posterior.
+========================================
+
+========================================
+1. FECHA Y HORA: 2026-05-18
+2. PREGUNTA / ORDEN RECIBIDA:
+   Crear el contenido para la landing page de Caterings (https://locopolostg.wpenginepowered.com/caterings/) basándose en el catálogo de ventas para caterings proporcionado (Google Slides). Mantener la estética de la web.
+3. CAMBIOS REALIZADOS:
+   - Se publicó el contenido completo en la página Caterings (ID: 4009, URL: /caterings/).
+   - La landing page incluye las siguientes secciones:
+       · Hero: "El reto del postre congelado ya tiene solución" con imagen y descripción del producto
+       · Por qué Locopolo: 3 pilares (servicio profesional, I+D+I, operativa sencilla)
+       · Locobó — El producto: características técnicas (estable hasta 23°C, termo-reversible)
+       · Testimonios: 5 citas reales de profesionales del catering
+       · Carta de sabores: 5 sabores salados (Locobó Cocktail) + 10 sabores dulces
+       · Beneficios: 6 tarjetas de ventajas para caterings y eventos
+       · Presentación & Packaging: 4 formatos (plato, caja, cubo take away, bandeja de catering)
+       · Galería de eventos: 4 fotos de eventos reales (Pukas, Social Hub, Miramar Gauak, Amazon)
+       · CTA final: datos de contacto de Asier Perez (Foodservice B2B) + botón "¿Hablamos?"
+   - El diseño usa la misma estética que la web: fondo #F1EFEE, tipografía Gotham/Inter, bloques negros, uppercase, grids responsive.
+========================================
+
+========================================
+1. FECHA Y HORA: 2026-05-18 12:04
+2. PREGUNTA / ORDEN RECIBIDA:
+   "En WordPress, en la sección de POR SECTORES está todo en mayúsculas. Tienes que poner Por sectores."
+3. CAMBIOS REALIZADOS:
+   - Se actualizó el título del ítem de menú principal (ID: 4013) de "POR SECTORES" a "Por sectores".
+========================================
+
+========================================
+1. FECHA Y HORA: 2026-05-18 12:16
+2. PREGUNTA / ORDEN RECIBIDA:
+   Tres cambios en la página de Caterings:
+   1) El texto del hero no tiene buen contraste, cambiarlo manteniendo la tipografía.
+   2) La página es demasiado larga: ignorar las diapositivas 1, 9, 10 y 12 de la presentación.
+   3) Cambiar los fondos negros, quedan muy mal.
+3. CAMBIOS REALIZADOS:
+   - Cambio 1 (contraste): color del párrafo hero (.lp-hero-desc) cambiado de #ccc a #444, legible sobre fondo claro.
+   - Cambio 2 (longitud): el hero se mantiene en fondo #F1EFEE (diapositiva 1 = portada, no estaba en la web). Eliminada la sección "Galería de eventos" (diapositiva 10 - CLIENTES). Eliminada la sección CTA final "¿Hablamos?" (diapositiva 12). La diapositiva 9 (Sobre nosotros) tampoco estaba en la web.
+   - Cambio 3 (fondos negros): los tres fondos oscuros (#1a1a1a / #000) cambiados a #F1EFEE (beige de marca) con texto oscuro: hero, sección Beneficios y tarjetas de Presentación & Packaging. Todos los colores de texto ajustados para mantener legibilidad.
+========================================
+
+========================================
+1. FECHA Y HORA: 2026-05-18 12:23
+2. PREGUNTA / ORDEN RECIBIDA:
+   "La página es demasiado larga. Tienes que reducir la cantidad de scroll a la mitad."
+3. CAMBIOS REALIZADOS:
+   - Reducidos todos los paddings de sección de 70px a 35px, y el hero de 80px/60px a 40px/30px.
+   - Reducidos gaps de todos los grids (why, testi, flavors, benefits, formats) a la mitad.
+   - Reducidos paddings internos de todas las tarjetas (~40% menos).
+   - Reducidos márgenes entre títulos y contenido a la mitad.
+   - Tamaños de fuente de h1 y h2 ligeramente reducidos (38px→32px, 26px→22px).
+   - No se eliminó ningún contenido, solo se compactó el espaciado visual.
+========================================
+
+========================================
+1. FECHA Y HORA: 2026-05-18 12:35
+2. PREGUNTA / ORDEN RECIBIDA:
+   "la parte que te he mandado en la foto me gusta. Pon la parte de 'testimonios' al final del todo."
+3. CAMBIOS REALIZADOS:
+   - Se movió la sección "Testimonios" (5 tarjetas con citas de clientes) del cuarto lugar al final de la página Caterings (ID: 4009).
+   - Nuevo orden de secciones: Hero → Por qué Locopolo → Locobó El producto → Carta de sabores → Beneficios → Presentación & Packaging → Testimonios.
+========================================
+
+========================================
+1. FECHA Y HORA: 2026-05-18 13:58
+2. PREGUNTA / ORDEN RECIBIDA:
+   "Sube la parte de los productos arriba. La altura de la foto de la izquierda tiene que encajar con la parte de El producto y la parte de Carta de sabores."
+3. CAMBIOS REALIZADOS:
+   - `align-items: start` cambiado a `align-items: stretch` en `.lp-product-block`: la foto ahora iguala la altura total de la columna derecha (texto + carousel).
+   - `.lp-product-img img`: `height: auto` → `height: 100%; object-fit: cover` para que la imagen llene el alto de su columna.
+   - Espaciado entre "El producto" y el carousel reducido (`margin-top:20px; padding-top:14px; border-top` → `margin-top:8px`): el carousel sube y queda más pegado al texto.
+========================================
+
+========================================
+1. FECHA Y HORA: 2026-05-18 13:53
+2. PREGUNTA / ORDEN RECIBIDA:
+   1) La foto de la izquierda es demasiado larga: reducirla a 2/3 de su tamaño actual (alto y ancho).
+   2) Quitar los puntos del carousel; dejar solo el contador (X/15) y las flechas.
+3. CAMBIOS REALIZADOS:
+   - Foto (tamaño 2/3): cambiado `grid-template-columns: 1fr 1fr` por `1fr 2fr`, de modo que la columna izquierda pasa de 50% a 33% del contenedor (exactamente 2/3 del ancho anterior). La altura también queda a 2/3 porque la imagen usa `height: auto` con su aspect ratio natural. `align-items: start` para alineación superior.
+   - Imagen: eliminado `height: 100%` (que estiraba al alto de la columna derecha), sustituido por `height: auto`.
+   - Puntos: CSS `.lp-fc-dots` cambiado a `display:none`. El div `.lp-fc-dots` con sus 15 labels eliminado del HTML. El contador (X/15) y las flechas ‹ › permanecen intactos.
+========================================
+
+========================================
+1. FECHA Y HORA: 2026-05-18 13:35
+2. PREGUNTA / ORDEN RECIBIDA:
+   1) Integrar el carousel de "Carta de Sabores" dentro de la sección "El Producto": moverlo a la columna derecha (debajo del texto), de modo que texto + carousel ocupen la misma altura que la foto de la izquierda.
+   2) Arreglar el bug de los puntos de navegación del carousel: en los productos 2/15, 4/15, 6/15... (números pares) no aparecía ningún punto negro que indicara la posición actual.
+3. CAMBIOS REALIZADOS:
+   - Bug puntos (arreglo): Las reglas CSS usaban `label:nth-child(N)` para activar el punto correspondiente, lo que entraba en conflicto con el CSS del tema para elementos pares. Se añadió clase `lp-dN` a cada label-punto en el HTML, y se actualizaron las 15 reglas CSS a `.lp-dN{background:#1a1a1a;}`. Los puntos ahora funcionan correctamente para todos los productos.
+   - Layout integrado: Las secciones "El Producto" y "Carta de Sabores" (que eran dos bloques separados) se fusionaron en una sola sección de dos columnas.
+   - Columna izquierda: la foto del polo (con `height:100%; object-fit:cover; object-position:top center`) se estira para igualar la altura de la columna derecha.
+   - Columna derecha: el texto de producto arriba (título, descripción, badges) + el carousel debajo, separados por una línea divisoria y etiqueta "Carta de sabores".
+   - CSS actualizado: `.lp-product-block` con `gap:0; align-items:stretch`; `.lp-product-img` con `border:2px solid #000`; `.lp-product-text` con `display:flex; flex-direction:column; border:2px solid #000; border-left:none`.
+   - La sección independiente de carousel fue eliminada; el componente vive ahora dentro del bloque de producto.
+========================================
+
+========================================
+1. FECHA Y HORA: 2026-05-18 15:26
+2. PREGUNTA / ORDEN RECIBIDA:
+   "En la carpeta de imagenes_catering tienes todos las imágenes de los polos. Utiliza esas fotos para el carrusel de la carta de sabores. Cuando cambie de producto, también se tendrá que cambiar la imagen de la derecha que hay en el carrusel."
+3. CAMBIOS REALIZADOS:
+   - Se subieron las 15 imágenes de la carpeta imagenes_catering/ a la librería de medios de WordPress (IDs asignados automáticamente, URLs en /wp-content/uploads/).
+   - Mapeo de imágenes por slot del carrusel:
+       p1 (Pesto y Tomate) → 02-pesto-y-tomate.png
+       p2 (Foie y Frambuesa) → 04-foie-y-frambuesa.png
+       p3 (Queso Gorgonzola y Pera) → 03-queso-gorgonzola-y-pera.png
+       p4 (Salmón y Aguacate) → 05-salmon-y-aguacate.png
+       p5 (Gilda) → 01-gilda.png
+       p6 (Mango y Maracuyá) → 06-mango-y-maracuya.png
+       p7 (Oreo) → 07-oreo.png
+       p8 (Cacahuete) → 08-cacahuete.png
+       p9 (Choco Caramelo Salado) → 09-choco-caramelo-salado.png
+       p10 (Café) → 10-cafe.png
+       p11 (Doble Choco) → 12-doble-choco.png
+       p12 (Pistacho) → 13-pistacho.png
+       p13 (Choco Vegano) → 11-choco-vegano.png
+       p14 (Choco Avellana) → 14-choco-avellana.png
+       p15 (Frambuesa) → 15-frambuesa.png
+   - Se reemplazó la imagen estática de la derecha del carrusel por 15 imágenes (clase lp-fc-img-pN, ocultas por defecto).
+   - Se añadieron reglas CSS: #lp-fcN:checked~.lp-fc-card .lp-fc-img-pN{display:block;} para mostrar la imagen correspondiente al sabor activo.
+   - La imagen de la derecha ahora cambia dinámicamente (CSS puro, sin JavaScript) al navegar entre productos.
+========================================
+
+========================================
+1. FECHA Y HORA: 2026-05-18 13:10
+2. PREGUNTA / ORDEN RECIBIDA:
+   Rediseñar la sección "Carta de Sabores" como un carousel al estilo de la foto enviada: foto del producto a la derecha, info a la izquierda (categoría, nombre, descripción), navegación con botones ‹ › y puntos, badge "NEW" en los salados. Los 15 productos en una sola serie.
+3. CAMBIOS REALIZADOS:
+   - Se reemplazó la lista estática de sabores por un carousel interactivo CSS puro (sin JavaScript, para compatibilidad con WAF de WP Engine).
+   - Técnica: 15 radio inputs ocultos + CSS :checked ~ para mostrar/ocultar paneles y botones de navegación.
+   - Cada producto tiene: etiqueta de categoría (dorado), nombre en mayúsculas, descripción breve.
+   - Navegación: botón ‹ (prev), 15 puntos de navegación, contador "01/15", botón › (next). Los botones envuelven (del 15 vuelve al 1 y viceversa).
+   - Los 5 sabores de Locobó Cocktail — Salados muestran badge dorado "NEW" en la imagen.
+   - CSS añadido al bloque <style> existente en la página. La imagen utilizada es la del polo existente en el sitio.
+========================================
