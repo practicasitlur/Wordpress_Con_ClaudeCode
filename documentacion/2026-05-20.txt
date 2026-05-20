@@ -1,0 +1,39 @@
+========================================
+1. FECHA Y HORA: 2026-05-20 15:00
+2. PREGUNTA / ORDEN RECIBIDA:
+   Hacer el registro de documentación mucho más completo y detallado. Registrar minuciosamente todos los pasos técnicos seguidos para migrar el sitio a local, especificando la aplicación de servidor local descargada, el plugin utilizado, los problemas de cuotas/límites de subida de PHP encontrados y cómo se solucionaron, además del cambio estructural en CLAUDE.md.
+3. CAMBIOS REALIZADOS:
+   - DESCARGA E INSTALACIÓN DEL ENTORNO LOCAL: Se descargó e instaló la aplicación oficial "Local" (de localwp.com) para configurar un servidor stack (Nginx/PHP/MySQL) nativo en el ordenador, aislando el desarrollo de la web en producción.
+   - EXPORTACIÓN DESDE PRODUCCIÓN: En la web real de internet se instaló y activó el plugin "All-in-One WP Migration and Backup" (de ServMask). Se generó un empaquetado completo del sitio (Base de datos, Temas, Plugins y Media) exportándolo como archivo nativo de extensión ".wpress" con un peso total de 500 MB.
+   - SOLUCIÓN DE BLOQUEO EN SERVIDOR LOCAL: Durante la creación del sitio limpio "locopolo -local", el instalador quedó congelado en "Downloading WordPress". Se solucionó forzando el cierre del proceso, eliminando el contenedor corrupto y ejecutando la aplicación "Local" con privilegios de Administrador de Windows para saltar las restricciones del Firewall.
+   - CONFIGURACIÓN DEL NÚCLEO PHP (AUMENTO DE LÍMITES): Al intentar importar el clon en el WordPress local, el sistema arrojó un error crítico de límite de hosting ("Your file exceeds the 300 MB upload limit"). Para solucionarlo:
+     * Se accedió a la ruta física del servidor local: `conf/php/`
+     * Se editó el archivo de configuración del sistema `php.ini` (php.ini.hbs) mediante el Bloc de Notas.
+     * Se incrementaron los valores de memoria para soportar archivos pesados modificando las directivas: `upload_max_filesize = 1000M` y `memory_limit = 1000M`.
+     * Se aplicó un reinicio de los servicios de Nginx y PHP desde la interfaz de Local (Stop site / Start site) logrando elevar con éxito el límite de subida a 1 GB.
+   - IMPORTACIÓN Y CLONACIÓN COMPLETA: Con el nuevo límite activo, se instaló el mismo plugin "All-in-One WP Migration" en el WordPress local, se cargó el archivo de 500 MB y se procedió a la sobreescritura total del sitio. El entorno local quedó sincronizado al 100% con la base de datos y archivos de producción.
+   - MODIFICACIÓN ESTRUCTURAL DE CLAUDE.md: Se reestructuró el archivo de control `CLAUDE.md` en la raíz de la carpeta del Child Theme (`locopolo-understrap-child`), introduciendo dos nuevas variables lógicas de entorno (`local: true` y `API: false`). Esto redefine el comportamiento de Claude Code, ordenándole imperativamente dejar de consumir la WordPress REST API remota y empezar a operar mediante comandos del sistema y manipulación directa de archivos físicos locales (PHP, CSS y JS).
+========================================
+1. FECHA Y HORA: 2026-05-20 16:02
+2. PREGUNTA / ORDEN RECIBIDA:
+   Cambiar el apartado de catering de la página web usando diseños_google_stitch/caterings/codigo/code.html como referencia de diseño, manteniendo el mismo estilo que el resto de la web. Copiar el diseño pero no literalmente.
+3. CAMBIOS REALIZADOS:
+   - CREADO archivo nuevo: `tema-local/page-templates/catering.php` con Template Name: Catering.
+   - El template implementa 8 secciones adaptadas del diseño de referencia (Tailwind/Google Stitch) al sistema Bootstrap 5 + estilo neobrutalist del sitio (bordes 3px negros, box-shadow 4px, colores negro/#FEE800/#105CF7, fuentes Poppins + Space Mono).
+   - Secciones: Hero con imagen y offset-border decorativo, Por qué Locopolo (3 tarjetas numeradas), El Producto (layout split con imagen grayscale hover + badge-tags), Carta de Sabores (4 cards con fondo oscuro), Beneficios (6 cards con SVG icons), Packaging (4 cards con hover amarillo), Testimonios y CTA final.
+   - Estilos añadidos mediante add_action('wp_head') con CSS personalizado dentro del template.
+   - Imágenes de hero/producto usan las fotos random del tema. Las flavor cards usan placeholders listos para sustituir por imágenes reales del media de WordPress.
+   - PENDIENTE: Asignar el template "Catering" a la página correspondiente desde el panel de WordPress (Páginas → Catering → Atributos de página → Plantilla).
+========================================
+1. FECHA Y HORA: 2026-05-20 16:27
+2. PREGUNTA / ORDEN RECIBIDA:
+   En el apartado de carta de sabores hay productos que no tienen foto. Las fotos están en la carpeta diseños_google_stitch/caterings/imagenes_catering/. Cogerlas y ponerlas donde corresponden.
+3. CAMBIOS REALIZADOS:
+   - COPIADAS 4 imágenes desde `diseños_google_stitch/caterings/imagenes_catering/` a `tema-local/img/catering/`:
+     * 01_Gilda.png → img/catering/01_Gilda.png
+     * 02_Pesto y Tomate.png → img/catering/02_Pesto_y_Tomate.png
+     * 04_Foie y Frambuesa.png → img/catering/04_Foie_y_Frambuesa.png
+     * 06_Mango y Maracuyá.png → img/catering/06_Mango_y_Maracuya.png
+   - ACTUALIZADO `tema-local/page-templates/catering.php`: reemplazados los 4 `<div class="flavor-img-placeholder">` de la sección "Carta de Sabores" por etiquetas `<img>` con `get_stylesheet_directory_uri()` apuntando a las imágenes copiadas.
+   - ELIMINADO el CSS de `.flavor-img-placeholder` del template ya que ya no se utiliza.
+========================================

@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(*)",
+      "PowerShell(*)",
+      "Bash(curl -s -u * https://locopolostg.wpenginepowered.com/wp-json/wp/v2/*)",
+      "Bash(curl -s -A * https://locopolostg.wpenginepowered.com/*)",
+      "Bash(powershell -Command *)"
+    ]
+  }
+}

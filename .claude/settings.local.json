@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\usuario\\\\Local Sites\\\\locopolo-local\\\\app\\\\public\\\\wp-content\\\\themes\\\\locopolo-understrap-child\\\\\" -Recurse -ErrorAction SilentlyContinue | ForEach-Object { if \\($_.PSIsContainer\\) { \"$\\($_.FullName\\)\\\\\" } else { $_.FullName } })"
+    ]
+  }
+}
