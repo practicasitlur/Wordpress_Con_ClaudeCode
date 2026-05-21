@@ -45,6 +45,7 @@ add_action( 'wp_head', function () {
 		}
 		.catering-hero .hero-image-wrapper {
 			position: relative;
+			margin-top: 2rem;
 		}
 		.catering-hero .hero-image-wrapper::after {
 			content: '';
@@ -59,7 +60,8 @@ add_action( 'wp_head', function () {
 			position: relative;
 			z-index: 1;
 			width: 100%;
-			height: 420px;
+			height: auto;
+			aspect-ratio: 4 / 5;
 			object-fit: cover;
 			border: 3px solid #000;
 			display: block;
@@ -112,8 +114,9 @@ add_action( 'wp_head', function () {
 			font-family: 'Space Mono', monospace;
 			font-size: 3rem;
 			font-weight: 700;
-			color: #000;
-			opacity: 0.08;
+			color: #FEE800;
+			opacity: 1;
+			-webkit-text-stroke: 1.5px #000;
 			line-height: 1;
 			margin-bottom: 0.75rem;
 		}
@@ -129,16 +132,21 @@ add_action( 'wp_head', function () {
 		}
 
 		/* Producto section */
-		.producto-image-wrapper img {
-			width: 100%;
-			height: auto;
-			border: 3px solid #000;
-			box-shadow: 4px 4px 0 0 #000;
-			filter: grayscale(100%);
-			transition: filter 0.6s;
+		@keyframes locobo-float {
+			0%, 100% { transform: translateY(0px); }
+			50%       { transform: translateY(-17.5px); }
 		}
-		.producto-image-wrapper img:hover {
-			filter: grayscale(0%);
+		.producto-image-wrapper {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+		.producto-image-wrapper .locobo-main {
+			width: 100%;
+			max-width: 340px;
+			height: auto;
+			display: block;
+			animation: locobo-float 3.5s ease-in-out infinite;
 		}
 		.producto-tag {
 			display: inline-block;
@@ -153,31 +161,91 @@ add_action( 'wp_head', function () {
 			font-weight: 700;
 		}
 
-		/* Flavor cards */
+		/* Sabores Carousel */
 		.sabores-section {
-			background-color: #000;
-			color: #fff;
+			background-color: #fff;
+			color: #000;
 			padding: 5rem 0;
+			border-top: 3px solid #000;
+			border-bottom: 3px solid #000;
 		}
 		.sabores-section h2 {
-			color: #FEE800;
+			color: #000;
 		}
 		.sabores-section .catering-label {
-			color: #b0b0a2;
+			color: #5F6776;
 		}
+		.sabores-outer {
+			position: relative;
+			padding: 0 52px;
+		}
+		.sabores-carousel {
+			overflow: hidden;
+		}
+		.sabores-track {
+			display: flex;
+			transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+			will-change: transform;
+		}
+		.sabores-slide {
+			flex: 0 0 25%;
+			padding: 0 6px;
+			box-sizing: border-box;
+		}
+		@media (max-width: 991px) {
+			.sabores-slide { flex: 0 0 50%; }
+			.sabores-outer { padding: 0 44px; }
+		}
+		@media (max-width: 575px) {
+			.sabores-slide { flex: 0 0 100%; }
+		}
+		.sabores-arrow {
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			width: 44px;
+			height: 44px;
+			background: #FEE800;
+			border: 3px solid #FEE800;
+			color: #000;
+			font-size: 1.5rem;
+			font-weight: 700;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			box-shadow: 3px 3px 0 0 rgba(254,232,0,0.4);
+			transition: background 0.15s, box-shadow 0.15s, transform 0.15s;
+			z-index: 2;
+		}
+		#sabores-prev { left: 0; }
+		#sabores-next { right: 0; }
+		.sabores-arrow:hover {
+			background: #000;
+			border-color: #000;
+			color: #fff;
+			box-shadow: 3px 3px 0 0 rgba(0,0,0,0.4);
+			transform: translateY(calc(-50% - 2px));
+		}
+		.sabores-arrow:active {
+			transform: translateY(calc(-50% + 1px));
+			box-shadow: 1px 1px 0 0 rgba(254,232,0,0.4);
+		}
+		/* Flavor card */
 		.flavor-card {
-			background: #1a1a1a;
-			border: 3px solid #333;
+			background: #fff;
+			border: 3px solid #000;
 			overflow: hidden;
 			transition: border-color 0.2s, transform 0.2s;
+			height: 100%;
 		}
 		.flavor-card:hover {
 			border-color: #FEE800;
 			transform: translateY(-4px);
 		}
 		.flavor-card .flavor-img-wrapper {
-			height: 180px;
-			background-color: #2a2a2a;
+			height: 160px;
+			background-color: #ebebea;
 			display: flex;
 			align-items: center;
 			justify-content: center;
@@ -185,7 +253,7 @@ add_action( 'wp_head', function () {
 			position: relative;
 		}
 		.flavor-card .flavor-img-wrapper img {
-			height: 150px;
+			height: 135px;
 			width: auto;
 			object-fit: contain;
 			transition: transform 0.4s;
@@ -207,13 +275,14 @@ add_action( 'wp_head', function () {
 		}
 		.flavor-card .flavor-body {
 			padding: 1.25rem;
+			background: #f1f1ef;
 		}
 		.flavor-card .flavor-category {
 			font-family: 'Space Mono', monospace;
 			font-size: 0.6rem;
 			letter-spacing: 0.1em;
 			text-transform: uppercase;
-			color: #b0b0a2;
+			color: #5F6776;
 			display: block;
 			margin-bottom: 0.4rem;
 		}
@@ -221,11 +290,11 @@ add_action( 'wp_head', function () {
 			font-size: 1.05rem;
 			font-weight: 700;
 			margin-bottom: 0.4rem;
-			color: #fff;
+			color: #000;
 		}
 		.flavor-card p {
 			font-size: 0.8rem;
-			color: #b0b0a2;
+			color: #5F6776;
 			margin-bottom: 0;
 		}
 
@@ -271,43 +340,91 @@ add_action( 'wp_head', function () {
 			margin-bottom: 0;
 		}
 
-		/* Packaging */
+		/* Formatos section */
+		.formatos-section {
+			background-color: #EDEDED;
+			border-top: 3px solid #000;
+			border-bottom: 3px solid #000;
+			padding: 5rem 0;
+		}
+
+				/* Packaging flip cards */
 		.packaging-section {
 			background-color: #fff;
 			border-top: 3px solid #000;
 			border-bottom: 3px solid #000;
 			padding: 5rem 0;
 		}
-		.packaging-card {
-			background: #EDEDED;
+		.pkg-flip {
+			perspective: 1200px;
+			height: 300px;
+			cursor: pointer;
+		}
+		.pkg-flip-inner {
+			position: relative;
+			width: 100%;
+			height: 100%;
+			transform-style: preserve-3d;
+			transition: transform 0.65s cubic-bezier(0.4, 0.2, 0.2, 1);
+		}
+		.pkg-flip.flipped .pkg-flip-inner {
+			transform: rotateY(180deg);
+		}
+		.pkg-front,
+		.pkg-back {
+			position: absolute;
+			inset: 0;
+			backface-visibility: hidden;
+			-webkit-backface-visibility: hidden;
 			border: 3px solid #000;
 			box-shadow: 4px 4px 0 0 #000;
-			padding: 2.5rem 1.5rem;
-			text-align: center;
-			height: 100%;
-			transition: background-color 0.2s, box-shadow 0.2s, transform 0.2s;
+			overflow: hidden;
 		}
-		.packaging-card:hover {
-			background-color: #FEE800;
-			box-shadow: 6px 6px 0 0 #000;
-			transform: translate(-2px, -2px);
+		.pkg-front {
+			background: #EDEDED;
+			display: flex;
+			flex-direction: column;
 		}
-		.packaging-card .pkg-icon {
-			width: 64px;
-			height: 64px;
-			background: #fff;
-			border: 3px solid #000;
-			border-radius: 50%;
+		.pkg-front .pkg-img-wrapper {
+			flex: 1;
+			background-color: #F1EFED;
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			margin: 0 auto 1.25rem;
+			overflow: hidden;
+			border-bottom: 3px solid #000;
+			padding: 1rem;
 		}
-		.packaging-card .pkg-icon svg {
-			width: 30px;
-			height: 30px;
+		.pkg-front .pkg-img-wrapper img {
+			max-width: 100%;
+			max-height: 100%;
+			width: auto;
+			height: auto;
+			object-fit: contain;
+			transform: scale(1.1);
+			transition: transform 0.4s;
 		}
-		.packaging-card h4 {
+		.pkg-front .pkg-img-wrapper img.no-zoom {
+			transform: scale(1);
+		}
+		.pkg-flip:not(.flipped) .pkg-img-wrapper::after {
+			content: '↻';
+			position: absolute;
+			bottom: 8px;
+			right: 10px;
+			font-size: 1.1rem;
+			color: #000;
+			opacity: 0.3;
+			transition: opacity 0.2s;
+			pointer-events: none;
+		}
+		.pkg-flip:not(.flipped):hover .pkg-img-wrapper::after {
+			opacity: 0.7;
+		}
+		.pkg-front .pkg-label {
+			padding: 1rem 1.25rem;
+		}
+		.pkg-front h4 {
 			font-family: 'Space Mono', monospace;
 			font-size: 0.7rem;
 			font-weight: 700;
@@ -315,7 +432,38 @@ add_action( 'wp_head', function () {
 			text-transform: uppercase;
 			margin-bottom: 0;
 		}
-
+		.pkg-back {
+			background: #F1EFED;
+			color: #000;
+			transform: rotateY(180deg);
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			padding: 2rem 1.75rem;
+			border: 3px solid #000;
+		}
+		.pkg-back .pkg-back-label {
+			font-family: 'Space Mono', monospace;
+			font-size: 0.6rem;
+			letter-spacing: 0.15em;
+			text-transform: uppercase;
+			color: #5F6776;
+			display: block;
+			margin-bottom: 0.75rem;
+		}
+		.pkg-back h4 {
+			font-size: 1.1rem;
+			font-weight: 800;
+			margin-bottom: 1rem;
+			color: #000;
+			line-height: 1.2;
+		}
+		.pkg-back p {
+			font-size: 0.82rem;
+			color: #4a4a4a;
+			line-height: 1.6;
+			margin-bottom: 0;
+		}
 		/* Testimonios */
 		.testimonios-section {
 			padding: 5rem 0;
@@ -354,18 +502,19 @@ add_action( 'wp_head', function () {
 
 		/* CTA final */
 		.catering-cta {
-			background-color: #000;
-			color: #fff;
+			background-color: #fff;
+			color: #000;
 			padding: 5rem 0;
 			text-align: center;
+			border-top: 3px solid #000;
 		}
 		.catering-cta h2 {
-			color: #FEE800;
+			color: #000;
 			font-size: clamp(1.8rem, 4vw, 3rem);
 			font-weight: 800;
 		}
 		.catering-cta p {
-			color: #b0b0a2;
+			color: #5F6776;
 		}
 
 		/* Marquee */
@@ -400,7 +549,7 @@ add_action( 'wp_head', function () {
 				margin-top: 3rem;
 			}
 			.catering-hero .hero-image-wrapper img {
-				height: 280px;
+				aspect-ratio: 4 / 5;
 			}
 		}
 	</style>
@@ -436,10 +585,10 @@ $child_uri = get_stylesheet_directory_uri();
 					</div>
 				</div>
 
-				<div class="col-lg-5 offset-lg-1">
+				<div class="col-lg-3 offset-lg-2">
 					<div class="hero-image-wrapper">
 						<img
-							src="<?php echo esc_url( $child_uri . '/img/random-image/tobias-keller-2ecH5Lw3zSk-unsplash.jpg' ); ?>"
+							src="<?php echo esc_url( $child_uri . '/img/catering/inicio.jpg' ); ?>"
 							alt="Locobó en un evento de catering"
 						/>
 					</div>
@@ -493,8 +642,9 @@ $child_uri = get_stylesheet_directory_uri();
 				<div class="col-lg-4 order-2 order-lg-1">
 					<div class="producto-image-wrapper">
 						<img
-							src="<?php echo esc_url( $child_uri . '/img/random-image/grant-lemons-jTCLppdwSEc-unsplash.jpg' ); ?>"
-							alt="Detalle del producto Locobó"
+							class="locobo-main"
+							src="<?php echo esc_url( $child_uri . '/img/catering/locobo.png' ); ?>"
+							alt="Locobó — postre para catering"
 						/>
 					</div>
 				</div>
@@ -520,76 +670,105 @@ $child_uri = get_stylesheet_directory_uri();
 	<section class="sabores-section" id="sabores">
 		<div class="<?php echo esc_attr( $container ); ?>">
 
-			<div class="d-flex justify-content-between align-items-end mb-5">
+			<div class="d-flex justify-content-between align-items-center mb-5">
 				<div>
 					<span class="catering-label">Explora nuestra</span>
 					<h2 class="mb-0" style="text-transform:uppercase;letter-spacing:-0.02em;">Carta de Sabores</h2>
 				</div>
-				<a href="<?php echo esc_url( home_url( '/sabores' ) ); ?>" class="btn btn-outline-light btn-sm px-4" style="font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;border:2px solid #fff;">
-					Ver todos →
-				</a>
 			</div>
 
-			<div class="row g-4">
+			<div class="sabores-outer">
+				<button class="sabores-arrow" id="sabores-prev" aria-label="Anterior">&lt;</button>
+				<button class="sabores-arrow" id="sabores-next" aria-label="Siguiente">&gt;</button>
+				<div class="sabores-carousel" id="sabores-carousel">
+				<div class="sabores-track" id="sabores-track">
 
-				<!-- Salados -->
-				<div class="col-sm-6 col-lg-3">
-					<div class="flavor-card h-100">
-						<div class="flavor-img-wrapper">
-							<img src="<?php echo esc_url( get_stylesheet_directory_uri() . '/img/catering/01_Gilda.png' ); ?>" alt="Gilda">
-							<span class="flavor-badge">SALADO</span>
-						</div>
-						<div class="flavor-body">
-							<span class="flavor-category">Cocktail — Salados</span>
-							<h4>Gilda</h4>
-							<p>Bañado en chocolate blanco con anchoa, pepinillo y guindilla.</p>
+					<?php
+					$sabores = array(
+						array( 'img' => '01_Gilda.png',                   'nombre' => 'Gilda',                  'cat' => 'Cocktail — Salados', 'desc' => 'Bañado en chocolate blanco con anchoa, pepinillo y guindilla.',             'badge' => 'NUEVO' ),
+						array( 'img' => '02_Pesto_y_Tomate.png',          'nombre' => 'Pesto y Tomate',          'cat' => 'Cocktail — Salados', 'desc' => 'Bañado en chocolate blanco y pasta de pistacho y albahaca.',               'badge' => 'NUEVO' ),
+						array( 'img' => '03_Queso_Gorgonzola_y_Pera.png', 'nombre' => 'Queso Gorgonzola y Pera', 'cat' => 'Cocktail — Salados', 'desc' => 'Bañado en chocolate blanco con queso azul y mermelada de pera.',          'badge' => 'NUEVO' ),
+						array( 'img' => '04_Foie_y_Frambuesa.png',        'nombre' => 'Foie y Frambuesa',        'cat' => 'Cocktail — Salados', 'desc' => 'Bañado en chocolate blanco, kikos en polvo y frambuesa liofilizada.',      'badge' => 'NUEVO' ),
+						array( 'img' => '05_Salmon_y_Aguacate.png',       'nombre' => 'Salmón y Aguacate',  'cat' => 'Cocktail — Salados', 'desc' => 'Bañado en chocolate blanco con salmón ahumado y crema de aguacate.', 'badge' => 'NUEVO' ),
+						array( 'img' => '06_Mango_y_Maracuya.png',        'nombre' => 'Mango y Maracuya', 'cat' => 'Locobó — Dulces', 'desc' => 'Bañado en chocolate negro 70% cacao artesano.',                       'badge' => '' ),
+						array( 'img' => '07_Oreo.png',                    'nombre' => 'Oreo',                    'cat' => 'Locobó — Dulces', 'desc' => 'Bañado en chocolate negro con crema de galleta Oreo.',                    'badge' => '' ),
+						array( 'img' => '08_Cacahuete.png',               'nombre' => 'Cacahuete',               'cat' => 'Locobó — Dulces', 'desc' => 'Bañado en chocolate negro con crema de cacahuete caramelizado.',         'badge' => '' ),
+						array( 'img' => '09_Choco_Caramelo_Salado.png',   'nombre' => 'Choco Caramelo Salado',   'cat' => 'Locobó — Dulces', 'desc' => 'Bañado en chocolate negro con caramelo salado artesano.',                'badge' => '' ),
+						array( 'img' => '10_Cafe.png',                    'nombre' => 'Café',               'cat' => 'Locobó — Dulces', 'desc' => 'Bañado en chocolate negro con crema de café intenso.',               'badge' => '' ),
+						array( 'img' => '11_Choco_Vegano.png',            'nombre' => 'Choco Vegano',            'cat' => 'Locobó — Dulces', 'desc' => 'Bañado en chocolate 100% vegano, sin lácteos ni derivados.',        'badge' => 'VEGANO' ),
+						array( 'img' => '12_Doble_Choco.png',             'nombre' => 'Doble Choco',             'cat' => 'Locobó — Dulces', 'desc' => 'Doble capa de chocolate negro intenso para los más chocolateros.',       'badge' => '' ),
+						array( 'img' => '13_Pistacho.png',                'nombre' => 'Pistacho',                'cat' => 'Locobó — Dulces', 'desc' => 'Bañado en chocolate blanco con crema pura de pistacho.',                  'badge' => '' ),
+						array( 'img' => '14_Choco_Avellana.png',          'nombre' => 'Choco Avellana',          'cat' => 'Locobó — Dulces', 'desc' => 'Bañado en chocolate negro con crema de avellana artesana.',              'badge' => '' ),
+						array( 'img' => '15_Frambuesa.png',               'nombre' => 'Frambuesa',               'cat' => 'Locobó — Dulces', 'desc' => 'Bañado en chocolate blanco con frambuesa liofilizada.',                  'badge' => '' ),
+					);
+					foreach ( $sabores as $sabor ) :
+					?>
+					<div class="sabores-slide">
+						<div class="flavor-card">
+							<div class="flavor-img-wrapper">
+								<img src="<?php echo esc_url( get_stylesheet_directory_uri() . '/img/catering/' . $sabor['img'] ); ?>" alt="<?php echo esc_attr( $sabor['nombre'] ); ?>">
+								<?php if ( $sabor['badge'] ) : ?>
+									<span class="flavor-badge"><?php echo esc_html( $sabor['badge'] ); ?></span>
+								<?php endif; ?>
+							</div>
+							<div class="flavor-body">
+								<span class="flavor-category"><?php echo esc_html( $sabor['cat'] ); ?></span>
+								<h4><?php echo esc_html( $sabor['nombre'] ); ?></h4>
+								<p><?php echo esc_html( $sabor['desc'] ); ?></p>
+							</div>
 						</div>
 					</div>
-				</div>
+					<?php endforeach; ?>
 
-				<div class="col-sm-6 col-lg-3">
-					<div class="flavor-card h-100">
-						<div class="flavor-img-wrapper">
-							<img src="<?php echo esc_url( get_stylesheet_directory_uri() . '/img/catering/02_Pesto_y_Tomate.png' ); ?>" alt="Pesto y Tomate">
-						</div>
-						<div class="flavor-body">
-							<span class="flavor-category">Cocktail — Salados</span>
-							<h4>Pesto y Tomate</h4>
-							<p>Bañado en chocolate blanco y pasta de pistacho y albahaca.</p>
-						</div>
-					</div>
 				</div>
-
-				<div class="col-sm-6 col-lg-3">
-					<div class="flavor-card h-100">
-						<div class="flavor-img-wrapper">
-							<img src="<?php echo esc_url( get_stylesheet_directory_uri() . '/img/catering/04_Foie_y_Frambuesa.png' ); ?>" alt="Foie y Frambuesa">
-							<span class="flavor-badge">NUEVO</span>
-						</div>
-						<div class="flavor-body">
-							<span class="flavor-category">Cocktail — Salados</span>
-							<h4>Foie y Frambuesa</h4>
-							<p>Bañado en chocolate blanco, kikos en polvo y frambuesa liofilizada.</p>
-						</div>
-					</div>
-				</div>
-
-				<div class="col-sm-6 col-lg-3">
-					<div class="flavor-card h-100">
-						<div class="flavor-img-wrapper">
-							<img src="<?php echo esc_url( get_stylesheet_directory_uri() . '/img/catering/06_Mango_y_Maracuya.png' ); ?>" alt="Mango y Maracuyá">
-						</div>
-						<div class="flavor-body">
-							<span class="flavor-category">Locobó — Dulces</span>
-							<h4>Mango y Maracuyá</h4>
-							<p>Bañado en chocolate negro 70% cacao artesano.</p>
-						</div>
-					</div>
-				</div>
-
 			</div>
+			</div><!-- /.sabores-outer -->
+
 		</div>
 	</section>
+
+	<script>
+	(function () {
+		var track    = document.getElementById('sabores-track');
+		var carousel = document.getElementById('sabores-carousel');
+		var btnPrev  = document.getElementById('sabores-prev');
+		var btnNext  = document.getElementById('sabores-next');
+		var total    = track.querySelectorAll('.sabores-slide').length;
+		var current  = 0;
+		var timer    = null;
+
+		function getVisible() {
+			if (window.innerWidth < 576) return 1;
+			if (window.innerWidth < 992) return 2;
+			return 4;
+		}
+
+		function goTo(index) {
+			var max = total - getVisible();
+			if (index < 0)   index = max;
+			if (index > max) index = 0;
+			current = index;
+			track.style.transform = 'translateX(-' + (100 / getVisible() * current) + '%)';
+		}
+
+		function startAuto() {
+			stopAuto();
+			timer = setInterval(function () { goTo(current + 1); }, 2500);
+		}
+
+		function stopAuto() {
+			if (timer) { clearInterval(timer); timer = null; }
+		}
+
+		btnNext.addEventListener('click', function () { goTo(current + 1); startAuto(); });
+		btnPrev.addEventListener('click', function () { goTo(current - 1); startAuto(); });
+		carousel.addEventListener('mouseenter', stopAuto);
+		carousel.addEventListener('mouseleave', startAuto);
+		window.addEventListener('resize', function () { goTo(Math.min(current, total - getVisible())); });
+
+		startAuto();
+	})();
+	</script>
 
 	<!-- ===== BENEFICIOS ===== -->
 	<section class="beneficios-section" id="beneficios">
@@ -690,44 +869,157 @@ $child_uri = get_stylesheet_directory_uri();
 			<div class="row g-4">
 
 				<div class="col-sm-6 col-lg-3">
-					<div class="packaging-card">
-						<div class="pkg-icon">
-							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+					<div class="pkg-flip">
+						<div class="pkg-flip-inner">
+							<div class="pkg-front">
+								<div class="pkg-img-wrapper">
+									<img src="<?php echo esc_url( get_stylesheet_directory_uri() . '/img/catering/packaging/plato_postre.jpg' ); ?>" alt="Plato de postre">
+								</div>
+								<div class="pkg-label"><h4>Plato de postre</h4></div>
+							</div>
+							<div class="pkg-back">
+								<span class="pkg-back-label">Presentación</span>
+								<h4>Plato de postre</h4>
+								<p>Presentación individual sobre plato de pizarra o cerámica. Ideal para eventos sentados y cenas de gala donde el producto brilla como postre principal.</p>
+								</div>
 						</div>
-						<h4>Plato de postre</h4>
 					</div>
 				</div>
 
 				<div class="col-sm-6 col-lg-3">
-					<div class="packaging-card">
-						<div class="pkg-icon">
-							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+					<div class="pkg-flip">
+						<div class="pkg-flip-inner">
+							<div class="pkg-front">
+								<div class="pkg-img-wrapper">
+									<img src="<?php echo esc_url( get_stylesheet_directory_uri() . '/img/catering/packaging/caja_consumo.jpg' ); ?>" alt="Caja consumo directo">
+								</div>
+								<div class="pkg-label"><h4>Caja consumo directo</h4></div>
+							</div>
+							<div class="pkg-back">
+								<span class="pkg-back-label">Presentación</span>
+								<h4>Caja consumo directo</h4>
+								<p>Caja de cartón con branding Locobó. Perfecta para consumo inmediato en eventos de pie, ferias y pop-ups. Fácil de transportar y abrir.</p>
+								</div>
 						</div>
-						<h4>Caja consumo directo</h4>
 					</div>
 				</div>
 
 				<div class="col-sm-6 col-lg-3">
-					<div class="packaging-card">
-						<div class="pkg-icon">
-							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+					<div class="pkg-flip">
+						<div class="pkg-flip-inner">
+							<div class="pkg-front">
+								<div class="pkg-img-wrapper">
+									<img src="<?php echo esc_url( get_stylesheet_directory_uri() . '/img/catering/packaging/cubo_takeaway.png' ); ?>" alt="Cubo take away">
+								</div>
+								<div class="pkg-label"><h4>Cubo take away</h4></div>
+							</div>
+							<div class="pkg-back">
+								<span class="pkg-back-label">Presentación</span>
+								<h4>Cubo take away</h4>
+								<p>Cubo individual con tapa hermética para llevar. Diseñado para festivales, mercados y eventos donde el cliente se mueve. Mantiene la cadena de frío.</p>
+								</div>
 						</div>
-						<h4>Cubo take away</h4>
 					</div>
 				</div>
 
 				<div class="col-sm-6 col-lg-3">
-					<div class="packaging-card">
-						<div class="pkg-icon">
-							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="17"/><line x1="9.5" y1="14.5" x2="14.5" y2="14.5"/></svg>
+					<div class="pkg-flip">
+						<div class="pkg-flip-inner">
+							<div class="pkg-front">
+								<div class="pkg-img-wrapper">
+									<img src="<?php echo esc_url( get_stylesheet_directory_uri() . '/img/catering/packaging/bandeja_catering.jpg' ); ?>" alt="Bandeja de catering" class="no-zoom">
+								</div>
+								<div class="pkg-label"><h4>Bandeja de catering</h4></div>
+							</div>
+							<div class="pkg-back">
+								<span class="pkg-back-label">Presentación</span>
+								<h4>Bandeja de catering</h4>
+								<p>Bandeja transparente de 60 unidades lista para el pase. El formato estrella para cocktails y eventos corporativos. Impacto visual garantizado.</p>
+								</div>
 						</div>
-						<h4>Bandeja de catering</h4>
 					</div>
 				</div>
 
 			</div>
 		</div>
 	</section>
+
+	<!-- ===== FORMATOS ===== -->
+	<section class="formatos-section" id="formatos">
+		<div class="<?php echo esc_attr( $container ); ?>">
+
+			<div class="mb-5">
+				<span class="catering-label">De exposición</span>
+				<h2 class="section-heading-underline">Formatos</h2>
+			</div>
+
+			<div class="row g-4 justify-content-center">
+
+				<div class="col-sm-6 col-lg-4">
+					<div class="pkg-flip">
+						<div class="pkg-flip-inner">
+							<div class="pkg-front">
+								<div class="pkg-img-wrapper">
+									<img src="<?php echo esc_url( get_stylesheet_directory_uri() . '/img/catering/formatos/mini_corner.jpg' ); ?>" alt="Mini Corner" class="no-zoom">
+								</div>
+								<div class="pkg-label"><h4>Mini Corner</h4></div>
+							</div>
+							<div class="pkg-back">
+								<span class="pkg-back-label">Formato</span>
+								<h4>Mini Corner</h4>
+								<p>Expositor compacto de Locopolo. Ideal para corners en sala, puntos de venta en espacios reducidos y eventos con poco margen de instalación.</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-sm-6 col-lg-4">
+					<div class="pkg-flip">
+						<div class="pkg-flip-inner">
+							<div class="pkg-front">
+								<div class="pkg-img-wrapper">
+									<img src="<?php echo esc_url( get_stylesheet_directory_uri() . '/img/catering/formatos/kiosko_carro.jpg' ); ?>" alt="Kiosko / Carro" class="no-zoom">
+								</div>
+								<div class="pkg-label"><h4>Kiosko / Carro</h4></div>
+							</div>
+							<div class="pkg-back">
+								<span class="pkg-back-label">Formato</span>
+								<h4>Kiosko / Carro</h4>
+								<p>Formato móvil autónomo para exteriores, festivales y eventos multitudinarios. Alto impacto visual y fácil desplazamiento entre zonas del evento.</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-sm-6 col-lg-4">
+					<div class="pkg-flip">
+						<div class="pkg-flip-inner">
+							<div class="pkg-front">
+								<div class="pkg-img-wrapper">
+									<img src="<?php echo esc_url( get_stylesheet_directory_uri() . '/img/catering/formatos/vitrina.jpg' ); ?>" alt="Vitrina" class="no-zoom">
+								</div>
+								<div class="pkg-label"><h4>Vitrina</h4></div>
+							</div>
+							<div class="pkg-back">
+								<span class="pkg-back-label">Formato</span>
+								<h4>Vitrina</h4>
+								<p>Expositor premium para hostelería y venues de lujo. Máxima visibilidad del producto en sala con una presencia elegante y profesional.</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</section>
+
+	<script>
+	document.querySelectorAll('.pkg-flip').forEach(function(card) {
+		card.addEventListener('click', function() {
+			this.classList.toggle('flipped');
+		});
+	});
+	</script>
 
 	<!-- ===== TESTIMONIOS ===== -->
 	<section class="testimonios-section">
@@ -769,15 +1061,12 @@ $child_uri = get_stylesheet_directory_uri();
 	<!-- ===== CTA FINAL ===== -->
 	<section class="catering-cta" id="contacto">
 		<div class="<?php echo esc_attr( $container ); ?>">
-			<span class="catering-label" style="color:#b0b0a2;justify-content:center;display:block;margin-bottom:0.5rem;">¿Listo para el siguiente nivel?</span>
+			<span class="catering-label" style="color:#5F6776;justify-content:center;display:block;margin-bottom:0.5rem;">¿Listo para el siguiente nivel?</span>
 			<h2 class="mb-3">Empieza a servir Locobó<br>en tu próximo evento</h2>
 			<p class="mb-5">Sin pedido mínimo. Entrega en 24–48h. Soporte comercial cercano.</p>
 			<div class="d-flex justify-content-center flex-wrap gap-3">
 				<a href="<?php echo esc_url( home_url( '/contacto' ) ); ?>" class="btn btn-warning btn-lg px-5 py-3" style="font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;border:3px solid #FEE800;box-shadow:4px 4px 0 0 #FEE800;color:#000;font-weight:700;">
 					Solicitar información
-				</a>
-				<a href="<?php echo esc_url( home_url( '/sabores' ) ); ?>" class="btn btn-outline-light btn-lg px-5 py-3" style="font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;border:3px solid #fff;box-shadow:4px 4px 0 0 #fff;">
-					Ver catálogo completo
 				</a>
 			</div>
 		</div>

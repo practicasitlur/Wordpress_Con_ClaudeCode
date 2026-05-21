@@ -1,0 +1,57 @@
+========================================
+1. FECHA Y HORA: 2026-05-21 09:37
+2. PREGUNTA / ORDEN RECIBIDA:
+   En el apartado de Carta de Sabores poner un carrusel con los 15 productos que cambie automáticamente cada un par de segundos, y que el usuario pueda navegar con flechas izquierda y derecha.
+3. CAMBIOS REALIZADOS:
+   - COPIADAS las 15 imágenes de sabores desde `diseños_google_stitch/caterings/imagenes_catering/` a `tema-local/img/catering/` (todas con nombres sin espacios ni tildes).
+   - REEMPLAZADA la sección "Carta de Sabores" de `tema-local/page-templates/catering.php`:
+     * La rejilla estática de 4 tarjetas se convirtió en un carrusel deslizante de 15 productos.
+     * Los 15 sabores se definen en un array PHP (nombre, imagen, categoría, descripción, badge) y se renderizan en un bucle foreach como `.sabores-slide`.
+     * El carrusel muestra 4 productos en desktop (≥992px), 2 en tablet (576–991px) y 1 en móvil (<576px).
+     * Auto-avance cada 2,5 segundos mediante setInterval; se pausa al hacer hover sobre el carrusel.
+     * Flechas ← → en estilo neobrutalist (fondo amarillo #FEE800, borde negro, box-shadow) en la cabecera del bloque.
+     * Al hacer clic en una flecha, el auto-avance se reinicia desde esa posición.
+     * El carrusel es circular: al llegar al último producto vuelve al primero y viceversa.
+   - AÑADIDOS estilos CSS para `.sabores-carousel`, `.sabores-track`, `.sabores-slide` (con media queries responsivas) y `.sabores-arrow`.
+========================================
+========================================
+1. FECHA Y HORA: 2026-05-21 11:42
+2. PREGUNTA / ORDEN RECIBIDA:
+   En el apartado de Presentación & Packaging, mejorar el diseño del reverso de las tarjetas flip: 1) Quitar el texto "Haz Click para volver". 2) Añadir una pequeña flecha en la esquina inferior derecha de la imagen que insinúe que hay algo detrás. 3) Cambiar el color negro oscuro del reverso por algo más limpio.
+3. CAMBIOS REALIZADOS:
+   - ELIMINADO el texto `↩ Haz clic para volver` (y su CSS `.pkg-back-hint`) de los 4 reversos de las tarjetas de packaging.
+   - AÑADIDO indicador `↻` en la esquina inferior derecha del cuadro de imagen (CSS `::after` sobre `.pkg-img-wrapper`): opacidad 0.3 en reposo, sube a 0.7 al hacer hover.
+   - CAMBIADO el fondo del reverso de `#000` (negro puro) a `#F1EFED` (blanco cálido, mismo color que el fondo de las imágenes). Texto actualizado: label gris `#5F6776`, título negro `#000`, descripción `#4a4a4a`.
+========================================
+========================================
+1. FECHA Y HORA: 2026-05-21 11:50
+2. PREGUNTA / ORDEN RECIBIDA:
+   En la sección "El Producto", poner la imagen Locobó.png como imagen principal, y justo abajo a la izquierda poner izarra.png, tal como se ve en la referencia visual.
+3. CAMBIOS REALIZADOS:
+   - COPIADAS dos imágenes desde `diseños_google_stitch/caterings/imagenes_catering/` a `tema-local/img/catering/`: `Locobó.png` → `locobo.png` e `izarra.png` → `izarra.png`.
+   - REEMPLAZADA la imagen placeholder de la sección "El Producto" por `locobo.png` (clase `locobo-main`, ocupa el 100% del ancho de la columna).
+   - AÑADIDA `izarra.png` con `position: absolute; bottom: -18px; left: -18px; width: 90px` dentro del mismo wrapper, quedando posicionada en la esquina inferior izquierda de la imagen principal.
+   - ACTUALIZADO el CSS de `.producto-image-wrapper`: se eliminó el filtro grayscale y el borde, y se añadió `position: relative` para permitir el posicionado absoluto del badge izarra.
+========================================
+========================================
+1. FECHA Y HORA: 2026-05-21 12:18
+2. PREGUNTA / ORDEN RECIBIDA:
+   Varios ajustes sobre la sección "El Producto" y el Hero: quitar izarra.png, añadir animación de flotado a locobo.png, aumentarla un 25%, y poner inicio.jfif como imagen del hero adaptando el contenedor a sus dimensiones.
+3. CAMBIOS REALIZADOS:
+   - ELIMINADA izarra.png del HTML y su CSS en la sección "El Producto" (tras varias iteraciones de posicionado a coordenadas 950x1770 sobre imagen de 1438x2048 px).
+   - AÑADIDA animación de flotado a `locobo.png`: `@keyframes locobo-float` con `translateY(0px)` → `translateY(-17.5px)` en ciclo de 3,5s ease-in-out infinite. El valor -17.5px es un 25% mayor que el original -14px.
+   - COPIADA `inicio.jfif` (1080×1350 px, ratio 4:5) desde `diseños_google_stitch/caterings/imagenes_catering/` a `tema-local/img/catering/inicio.jpg`.
+   - REEMPLAZADA la imagen placeholder del Hero por `inicio.jpg`.
+   - ADAPTADO el contenedor del Hero a las proporciones reales de la imagen: sustituido `height: 420px` por `aspect-ratio: 4 / 5` con `height: auto`, tanto en desktop como en el media query de móvil (≤767px).
+========================================
+========================================
+1. FECHA Y HORA: 2026-05-21 13:06
+2. PREGUNTA / ORDEN RECIBIDA:
+   Varios ajustes menores y nueva sección "Formatos" debajo de Presentación & Packaging: números 01/02/03 más visibles, imagen hero más pequeña y reposicionada, flechas del carrusel más grandes, y nueva sección con flip cards de los 3 formatos de exposición.
+3. CAMBIOS REALIZADOS:
+   - CAMBIADO color de `.card-number` (01/02/03 en "Por qué Locopolo") de `#000` con `opacity: 0.08` a `#FEE800` con `opacity: 1` y `-webkit-text-stroke: 1.5px #000` para máxima legibilidad en estilo neobrutalist.
+   - CAMBIADAS flechas del carrusel de ← → (`&#8592;`/`&#8594;`) a `<` / `>`, y aumentado `font-size` de `1.1rem` a `1.5rem`.
+   - REDUCIDA columna de imagen hero de `col-lg-5` a `col-lg-3` (3/5 del tamaño), offset aumentado a `offset-lg-2` y añadido `margin-top: 2rem` para moverla más a la derecha y abajo.
+   - CREADA sección "Formatos" (`#formatos`) con fondo `#EDEDED`, entre Packaging y Testimonios. Tres tarjetas flip (col-lg-4) con las mismas clases CSS de packaging: Mini Corner, Kiosko/Carro y Vitrina.
+   - COPIADAS 3 imágenes desde `diseños_google_stitch/caterings/imagenes_catering/formatos/` a `tema-local/img/catering/formatos/`: `mini_corner.jpg`, `kiosko_carro.jpg`, `vitrina.jpg`.
+========================================
