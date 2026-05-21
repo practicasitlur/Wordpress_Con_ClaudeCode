@@ -56,7 +56,7 @@ add_action( 'wp_head', function () {
 			border: 3px solid #000;
 			z-index: 0;
 		}
-		.catering-hero .hero-image-wrapper img {
+		.catering-hero .hero-image-wrapper video {
 			position: relative;
 			z-index: 1;
 			width: 100%;
@@ -548,7 +548,7 @@ add_action( 'wp_head', function () {
 			.catering-hero .hero-image-wrapper {
 				margin-top: 3rem;
 			}
-			.catering-hero .hero-image-wrapper img {
+			.catering-hero .hero-image-wrapper video {
 				aspect-ratio: 4 / 5;
 			}
 		}
@@ -585,12 +585,17 @@ $child_uri = get_stylesheet_directory_uri();
 					</div>
 				</div>
 
-				<div class="col-lg-3 offset-lg-2">
+				<div class="col-lg-4 offset-lg-1">
 					<div class="hero-image-wrapper">
-						<img
-							src="<?php echo esc_url( $child_uri . '/img/catering/inicio.jpg' ); ?>"
-							alt="Locobó en un evento de catering"
-						/>
+						<video
+							autoplay
+							muted
+							loop
+							playsinline
+							preload="auto"
+						>
+							<source src="<?php echo esc_url( $child_uri . '/img/catering/diario_vasco.mp4' ); ?>" type="video/mp4">
+						</video>
 					</div>
 				</div>
 
