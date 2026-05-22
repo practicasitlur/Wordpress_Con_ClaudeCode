@@ -11,7 +11,7 @@ add_action('rest_api_init', function () {
     register_rest_route('odoo/v1', '/tiendas', array(
         'methods'             => 'POST',
         'callback'            => 'recibir_tienda_desde_odoo',
-        'permission_callback' => 'validar_token_odoo', // Seguridad
+        'permission_callback' => 'validar_token_odoo', //  Seguridad
     ));
 });
 

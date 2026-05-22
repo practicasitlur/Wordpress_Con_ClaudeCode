@@ -11,5 +11,19 @@
 2. PREGUNTA / ORDEN RECIBIDA:
    El archivo conectar_API.php se ha movido dentro de la carpeta conexion-api-odoo-wordpress. Actualizar el .md para reflejarlo.
 3. CAMBIOS REALIZADOS:
-   - ACTUALIZADO `API/proyecto-integracion-odoo-wp.md`: el árbol de archivos ahora muestra `conectar_API.php` como hijo de `conexion-api-odoo-wordpress/` en lugar de estar suelto en `API/`.
+   - ACTUALIZADO `API WORDPRESS-ODOO/proyecto-integracion-odoo-wp.md`: el árbol de archivos ahora muestra `conectar_API.php` como hijo de `conexion-api-odoo-wordpress/` en lugar de estar suelto en la raíz de `API WORDPRESS-ODOO/`.
+========================================
+========================================
+1. FECHA Y HORA: 2026-05-22 15:26
+2. PREGUNTA / ORDEN RECIBIDA:
+   El plugin no aparecía en la lista de plugins de WordPress. Corregirlo y hacer que el endpoint funcione correctamente creando tiendas visibles en el admin y en la sección "Encuéntranos".
+3. CAMBIOS REALIZADOS:
+   - DIAGNOSTICADO que el plugin no aparecía por falta de cabecera `Plugin Name:` en `integracion-oddo.php`. Añadida la cabecera estándar de WordPress.
+   - DIAGNOSTICADO que el post type real es `tienda` (singular), no `tiendas`. El endpoint estaba creando posts en un post type inexistente. Corregido en el plugin.
+   - DIAGNOSTICADOS los meta keys reales del CPT `tienda` consultando la BD: `tienda_id`, `tienda_direccion`, `tienda_ciudad`. Corregidos en el plugin (antes usaba `id_odoo_tienda`, `direccion_tienda`).
+   - DIAGNOSTICADOS los slugs reales de las taxonomías consultando la REST API: `zona` (no `zonas`) y `tipo-tienda` (no `tipos-de-tienda`). Corregidos en el plugin.
+   - AÑADIDO soporte en el endpoint para los campos `zona`, `tipo` y `ciudad` en el JSON de entrada, asignando taxonomías con `wp_set_object_terms` y campo ACF `tienda_ciudad`.
+   - AÑADIDO endpoint de diagnóstico `GET /wp-json/odoo/v1/diagnostico` que consulta la BD y devuelve post types reales, posts de ejemplo y meta keys — usado para descubrir la estructura real sin asumir nombres.
+   - AÑADIDA asignación de idioma WPML automática (`apply_filters('wpml_default_language')`) para que los posts creados por API sean visibles en el admin.
+   - CREADA carpeta `API WORDPRESS-ODOO/pruebas/` con `test_endpoint.py`: 3 tests (token válido, token inválido, sin token). Verificado que la tienda "Café de León" aparece en el admin y en el mapa de Encuéntranos.
 ========================================
