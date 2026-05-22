@@ -2,7 +2,7 @@
 
 ## Configuración de Entorno
 - **local:** true
-- **API:** false
+- **API CLAUDE-WORDPRESS:** false
 - **Ruta del acceso directo en el proyecto:** `./tema-local`
 - **Ruta real del servidor local:** `C:\Users\usuario\Local Sites\locopolo-local\app\public\wp-content\themes\locopolo-understrap-child`
 
@@ -20,6 +20,18 @@
 ## Reglas de Entorno (OBLIGATORIO)
 - **Si `local` es `true`:** Tienes prohibido usar la API REST. Debes realizar todas las modificaciones operando directamente sobre los archivos físicos del tema en el directorio actual (leyendo, creando y modificando archivos PHP, CSS, JS, etc.) usando comandos de terminal.
 - **Si `API` es `true`:** Utiliza la WordPress REST API y la configuración de `wordpress-sites.json` para realizar los cambios remotamente.
+
+---
+
+## Carpeta API — Integración Odoo → WordPress
+
+La carpeta `./API` contiene todo lo relacionado con la sincronización de datos desde **Odoo** hacia **WordPress** mediante la REST API.
+
+- **`conexion-api-odoo-wordpress/`** — Junction NTFS que apunta al plugin activo en el servidor local (`wp-content/plugins/integracion-oddo`). Editar aquí afecta directamente al plugin.
+  - **`conectar_API.php`** — Lógica del endpoint `POST /wp-json/odoo/v1/tiendas`: valida el token `X-Odoo-Token`, busca o crea un post de tipo `tiendas` y guarda los campos ACF.
+- **`proyecto-integracion-odoo-wp.md`** — Documento de contexto completo: arquitectura, plan de desarrollo en 5 pasos e instrucciones para la IA.
+
+> Para trabajar en esta integración, editar únicamente dentro de `conexion-api-odoo-wordpress/`. No tocar archivos del tema hijo para lógica de APIs.
 
 ---
 

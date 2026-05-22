@@ -1,0 +1,15 @@
+========================================
+1. FECHA Y HORA: 2026-05-22 11:33
+2. PREGUNTA / ORDEN RECIBIDA:
+   Crear un archivo .md dentro de la carpeta API con el contexto del proyecto de integración Odoo→WordPress, adaptando los nombres reales del proyecto.
+3. CAMBIOS REALIZADOS:
+   - CREADO `API/proyecto-integracion-odoo-wp.md` con la arquitectura completa del proyecto: estructura de archivos, endpoint registrado (`POST /wp-json/odoo/v1/tiendas`), plan de desarrollo en 5 pasos y reglas para Claude Code.
+   - Nombres adaptados al proyecto real: plugin `integracion-oddo`, junction `conexion-api-odoo-wordpress`, CPT `tiendas`, campos ACF `id_odoo_tienda` / `direccion_tienda` / `telefono_tienda`.
+========================================
+========================================
+1. FECHA Y HORA: 2026-05-22 11:33
+2. PREGUNTA / ORDEN RECIBIDA:
+   El archivo conectar_API.php se ha movido dentro de la carpeta conexion-api-odoo-wordpress. Actualizar el .md para reflejarlo.
+3. CAMBIOS REALIZADOS:
+   - ACTUALIZADO `API/proyecto-integracion-odoo-wp.md`: el árbol de archivos ahora muestra `conectar_API.php` como hijo de `conexion-api-odoo-wordpress/` en lugar de estar suelto en `API/`.
+========================================
