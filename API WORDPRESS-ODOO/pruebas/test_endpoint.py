@@ -24,10 +24,13 @@ try:
     r = requests.post(
         URL,
         json={
-            "odoo_id":   "TEST-002",
-            "nombre":    "Tienda de Prueba",
-            "direccion": "Calle Mayor 1, Bilbao",
-            "telefono":  "600000000",
+            "odoo_id":   "TEST-CACERES-001",
+            "nombre":    "Café de Cáceres",
+            "direccion": "Plaza Mayor 3, Cáceres",
+            "telefono":  "927000000",
+            "zona":      "caceres",
+            "tipo":      "mini-corner",
+            "ciudad":    "Cáceres",
         },
         headers={"X-Odoo-Token": TOKEN, "Content-Type": "application/json"},
         timeout=10,

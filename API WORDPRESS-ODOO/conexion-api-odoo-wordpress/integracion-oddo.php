@@ -87,6 +87,9 @@ function recibir_tienda_desde_odoo(WP_REST_Request $request) {
     $nombre    = sanitize_text_field($parametros['nombre']);
     $direccion = sanitize_text_field($parametros['direccion']);
     $telefono  = sanitize_text_field($parametros['telefono']);
+    $zona      = sanitize_text_field($parametros['zona'] ?? '');
+    $tipo      = sanitize_text_field($parametros['tipo'] ?? '');
+    $ciudad    = sanitize_text_field($parametros['ciudad'] ?? '');
 
     // Comprobar si esta tienda ya existe en WP para actualizarla, o crear una nueva
     $args = array(
@@ -144,8 +147,12 @@ function recibir_tienda_desde_odoo(WP_REST_Request $request) {
     // Aquí usamos ACF PRO para guardar los datos estructurados en sus cajones
     update_field('tienda_id', $odoo_id, $post_id);
     update_field('tienda_direccion', $direccion, $post_id);
-    // telefono no tiene campo ACF en tienda — guardar como meta directa
-update_post_meta($post_id, 'tienda_telefono', $telefono);
+    if ( $ciudad ) { update_field('tienda_ciudad', $ciudad, $post_id); }
+    update_post_meta($post_id, 'tienda_telefono', $telefono);
+
+    // Asignar taxonomias
+    if ( $zona ) { wp_set_object_terms($post_id, $zona, 'zona', false); }
+    if ( $tipo ) { wp_set_object_terms($post_id, $tipo, 'tipo-tienda', false); }
 
     return new WP_REST_Response(array(
         'status'          => 'success',
@@ -153,6 +160,8 @@ update_post_meta($post_id, 'tienda_telefono', $telefono);
         'post_status'     => $post_guardado->post_status,
         'post_title'      => $post_guardado->post_title,
         'post_type'       => $post_guardado->post_type,
-        'wpml_lang'       => $idioma_defecto,
+        'wpml_lang'   => $idioma_defecto,
+        'zona'        => $zona ?: 'no enviada',
+        'tipo'        => $tipo ?: 'no enviado',
     ), 200);
 }
