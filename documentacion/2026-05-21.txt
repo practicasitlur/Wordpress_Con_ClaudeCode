@@ -55,3 +55,29 @@
    - CREADA sección "Formatos" (`#formatos`) con fondo `#EDEDED`, entre Packaging y Testimonios. Tres tarjetas flip (col-lg-4) con las mismas clases CSS de packaging: Mini Corner, Kiosko/Carro y Vitrina.
    - COPIADAS 3 imágenes desde `diseños_google_stitch/caterings/imagenes_catering/formatos/` a `tema-local/img/catering/formatos/`: `mini_corner.jpg`, `kiosko_carro.jpg`, `vitrina.jpg`.
 ========================================
+========================================
+1. FECHA Y HORA: 2026-05-21 13:20
+2. PREGUNTA / ORDEN RECIBIDA:
+   Las tarjetas de Formatos no giraban al hacer clic.
+3. CAMBIOS REALIZADOS:
+   - CORREGIDO el bug: el `<script>` del flip (`.pkg-flip` forEach) estaba ubicado antes de la sección Formatos en el HTML, por lo que el querySelectorAll no encontraba esas tarjetas al ejecutarse. Se movió el bloque `<script>` a después del cierre de la sección Formatos para que todos los `.pkg-flip` estén en el DOM cuando se registran los eventos.
+========================================
+========================================
+1. FECHA Y HORA: 2026-05-21 13:30
+2. PREGUNTA / ORDEN RECIBIDA:
+   Cambiar el color negro de la sección CTA final y quitar el botón "Ver catálogo completo".
+3. CAMBIOS REALIZADOS:
+   - CAMBIADO el fondo de `.catering-cta` de `#000` a `#fff` con `border-top: 3px solid #000`.
+   - ACTUALIZADOS colores de texto: título de `#FEE800` a `#000`, párrafo de `#b0b0a2` a `#5F6776`, label de `#b0b0a2` a `#5F6776`.
+   - ELIMINADO el botón "Ver catálogo completo" (enlace `btn-outline-light`) del HTML.
+========================================
+========================================
+1. FECHA Y HORA: 2026-05-21 13:45
+2. PREGUNTA / ORDEN RECIBIDA:
+   Sustituir la imagen del hero por el vídeo `Diario Vasco.mp4` (40 MB). Después, reemplazarlo por la versión comprimida `Video_Inicio.mp4`. Finalmente, hacer el vídeo un poco más ancho.
+3. CAMBIOS REALIZADOS:
+   - COPIADO `Diario Vasco.mp4` desde la raíz del proyecto a `tema-local/img/catering/diario_vasco.mp4`.
+   - REEMPLAZADO el `<img>` del hero por un `<video autoplay muted loop playsinline>` apuntando a `diario_vasco.mp4`. CSS actualizado: `img` → `video` en `.hero-image-wrapper`, manteniendo `aspect-ratio: 4/5` y `object-fit: cover`.
+   - REEMPLAZADO el vídeo por la versión comprimida: copiado `videos/Video_Inicio.mp4` sobre `tema-local/img/catering/diario_vasco.mp4` (sin cambios en el código).
+   - AMPLIADA la columna del vídeo de `col-lg-3 offset-lg-2` a `col-lg-4 offset-lg-1` para que se vea más ancho y no se recorte.
+========================================
