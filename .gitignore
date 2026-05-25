@@ -3,3 +3,7 @@
 *.exe
 *.zip
 *.tar.gz
+
+# Credenciales — nunca subir a GitHub
+.env
+*.env

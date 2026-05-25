@@ -2,14 +2,14 @@
 
 ## ¿Para qué sirve?
 
-Este plugin expone una **API REST en WordPress** para que **Odoo pueda hacer consultas y obtener datos**.
+Este plugin permite que **WordPress llame a la API de Odoo** para consultar o sincronizar datos.
 
 El flujo es:
 ```
-Odoo  →  petición HTTP  →  WordPress (este plugin)  →  respuesta con datos
+WordPress (este plugin)  →  petición HTTP  →  Odoo  →  respuesta con datos
 ```
 
-Odoo es el cliente. WordPress es el servidor que responde.
+WordPress es el cliente. Odoo es el servidor que responde.
 
 ---
 

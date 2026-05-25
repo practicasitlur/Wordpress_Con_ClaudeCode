@@ -1,0 +1,74 @@
+========================================
+1. FECHA Y HORA: 2026-05-25 10:19
+2. PREGUNTA / ORDEN RECIBIDA:
+   Reparar junction rota en API WORDPRESS-ODOO/conexion-api-odoo-wordpress porque el plugin había cambiado de nombre.
+3. CAMBIOS REALIZADOS:
+   - Eliminada la junction rota conexion-api-odoo-wordpress dentro de API WORDPRESS-ODOO.
+   - Creada nueva junction apuntando a wp-content/plugins/API WORDPRESS-ODOO.
+   - Renombrada la junction a conexion-api-wordpress-odoo.
+========================================
+
+========================================
+1. FECHA Y HORA: 2026-05-25 10:31
+2. PREGUNTA / ORDEN RECIBIDA:
+   Crear estructura para la carpeta API ODOO-WORDPRESS: carpeta pruebas vacía y junction al plugin.
+3. CAMBIOS REALIZADOS:
+   - Creada carpeta pruebas/ dentro de API ODOO-WORDPRESS.
+   - Creada junction conexion-api-odoo-wordpress apuntando a wp-content/plugins/API ODOO-WORDPRESS.
+   - Creado archivo API ODOO-WORDPRESS.php con header mínimo de plugin WordPress.
+========================================
+
+========================================
+1. FECHA Y HORA: 2026-05-25 10:35
+2. PREGUNTA / ORDEN RECIBIDA:
+   Crear documentación del plugin API ODOO-WORDPRESS y actualizar CLAUDE.md con arquitectura de dos plugins.
+3. CAMBIOS REALIZADOS:
+   - Creado API ODOO-WORDPRESS/proyecto-integracion-wordpress-odoo.md con descripción del plugin, flujo, seguridad, endpoints previstos y estructura de archivos.
+   - Actualizado CLAUDE.md: sección de APIs reescrita para reflejar dos plugins independientes con sus carpetas, junctions y dirección de flujo.
+========================================
+
+========================================
+1. FECHA Y HORA: 2026-05-25 10:41
+2. PREGUNTA / ORDEN RECIBIDA:
+   Subir cambios a GitHub. Error porque había un archivo .msi de 355 MB que superaba el límite de GitHub.
+3. CAMBIOS REALIZADOS:
+   - Deshecho el commit problemático con git reset --soft HEAD~1.
+   - Eliminado el archivo LibreOffice_26.2.3_Win_x86-64.msi del índice de git.
+   - Creado .gitignore excluyendo *.msi, *.exe, *.zip, *.tar.gz.
+   - Rehecho el commit sin el archivo grande y push completado a GitHub.
+========================================
+
+========================================
+1. FECHA Y HORA: 2026-05-25 10:45
+2. PREGUNTA / ORDEN RECIBIDA:
+   Corrección de la convención de nombres de los plugins: ODOO-WORDPRESS = WordPress llama a Odoo. WORDPRESS-ODOO = Odoo llama a WordPress.
+3. CAMBIOS REALIZADOS:
+   - Actualizado CLAUDE.md con la descripción correcta de cada plugin.
+   - Actualizado proyecto-integracion-wordpress-odoo.md con el flujo correcto.
+========================================
+
+========================================
+1. FECHA Y HORA: 2026-05-25 11:15
+2. PREGUNTA / ORDEN RECIBIDA:
+   Crear conexión con la API de Odoo y verificar que funciona. Guardar credenciales en .env.
+3. CAMBIOS REALIZADOS:
+   - Creado API ODOO-WORDPRESS/.env con ODOO_API_KEY, ODOO_URL, ODOO_DB, ODOO_USERNAME y ODOO_EMAIL.
+   - Añadido .env y *.env al .gitignore para que no se suban a GitHub.
+   - Creado pruebas/test_conexion_odoo.py: verifica autenticación y lee contactos de Odoo.
+   - Creado pruebas/test_ultimo_pedido.py: busca el último pedido confirmado de un partner.
+   - Conexión verificada: UID 112, lectura de contactos y pedidos funcionando correctamente.
+========================================
+
+========================================
+1. FECHA Y HORA: 2026-05-25 11:50
+2. PREGUNTA / ORDEN RECIBIDA:
+   Crear el plugin completo API ODOO-WORDPRESS: cron job diario que consulta Odoo, actualiza fecha_ultimo_pedido o manda a papelera tiendas con más de 1 año sin pedidos.
+3. CAMBIOS REALIZADOS:
+   - Actualizado API ODOO-WORDPRESS.php: header del plugin, cron job diario, menú de administración.
+   - Creado includes/class-odoo-client.php: cliente JSON-RPC para Odoo con autenticación y consulta de último pedido.
+   - Creado includes/class-tiendas-sync.php: lógica de sincronización, actualiza fecha_ultimo_pedido o manda a papelera si > 1 año.
+   - Creado admin/settings-page.php: panel de configuración con credenciales, botón de sync manual y tabla de resultados.
+   - Creado campo ACF fecha_ultimo_pedido (Date Picker, formato Ymd) en el grupo Campos para tiendas.
+   - Actualizado id_odoo_tienda de la tienda de prueba (ID 4079) con el partner real de Odoo (ID 7804).
+   - Plugin activado y sincronización probada: tienda actualizada correctamente con fecha 20260326.
+========================================
