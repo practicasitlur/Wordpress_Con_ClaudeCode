@@ -23,9 +23,9 @@ class AOW_Odoo_Client {
         $response = wp_remote_post(
             $this->url . '/jsonrpc',
             [
-                'timeout'     => 30,
-                'headers'     => [ 'Content-Type' => 'application/json' ],
-                'body'        => wp_json_encode( [
+                'timeout' => 30,
+                'headers' => [ 'Content-Type' => 'application/json' ],
+                'body'    => wp_json_encode( [
                     'jsonrpc' => '2.0',
                     'method'  => 'call',
                     'id'      => 1,
@@ -66,6 +66,30 @@ class AOW_Odoo_Client {
         return $this->uid;
     }
 
+    /**
+     * Obtiene todos los contactos con categoría "TIENDA" en Odoo.
+     */
+    public function get_tiendas() {
+        if ( ! $this->uid ) {
+            $this->authenticate();
+        }
+
+        return $this->call( 'object', 'execute_kw', [
+            $this->db,
+            $this->uid,
+            $this->api_key,
+            'res.partner',
+            'search_read',
+            [ [ [ 'category_id.name', '=', 'TIENDA' ] ] ],
+            [
+                'fields' => [ 'id', 'name', 'street', 'city', 'zip', 'phone', 'mobile', 'state_id' ],
+            ],
+        ] );
+    }
+
+    /**
+     * Devuelve la fecha del último pedido confirmado de un partner, o null si no tiene.
+     */
     public function get_last_order_date( $partner_id ) {
         if ( ! $this->uid ) {
             $this->authenticate();

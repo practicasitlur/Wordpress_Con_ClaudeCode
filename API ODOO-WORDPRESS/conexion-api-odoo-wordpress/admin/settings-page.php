@@ -21,29 +21,41 @@ function aow_settings_page() {
         echo '<div class="notice notice-success"><p>Configuración guardada.</p></div>';
     }
 
-    // Ejecutar sync manual
-    if ( isset( $_POST['aow_sync_manual'] ) ) {
+    // Importación completa desde Odoo
+    if ( isset( $_POST['aow_importar'] ) ) {
+        check_admin_referer( 'aow_settings_nonce' );
+        $sync = new AOW_Tiendas_Sync();
+        $sync->run_full_import();
+        echo '<div class="notice notice-success"><p>Importación completada.</p></div>';
+    }
+
+    // Revisión diaria manual
+    if ( isset( $_POST['aow_revision'] ) ) {
         check_admin_referer( 'aow_settings_nonce' );
         $sync = new AOW_Tiendas_Sync();
         $sync->run();
-        echo '<div class="notice notice-success"><p>Sincronización ejecutada.</p></div>';
+        echo '<div class="notice notice-success"><p>Revisión diaria ejecutada.</p></div>';
     }
 
-    $settings  = get_option( 'aow_settings', [] );
-    $ultimo    = get_option( 'aow_ultimo_sync', null );
-    $colores   = [
+    $settings = get_option( 'aow_settings', [] );
+    $ultimo   = get_option( 'aow_ultimo_sync', null );
+    $colores  = [
+        'importada'   => '#d4edda',
         'actualizada' => '#d4edda',
-        'papelera'    => '#f8d7da',
+        'omitida'     => '#fff3cd',
+        'papelera'    => '#fff3cd',
+        'eliminada'   => '#f8d7da',
         'sin_pedidos' => '#fff3cd',
         'error'       => '#f8d7da',
     ];
     ?>
     <div class="wrap">
         <h1>Sincronización Odoo → WordPress</h1>
-        <p>Este plugin consulta la API de Odoo diariamente y actualiza o elimina tiendas según su último pedido.</p>
+        <p>Importa tiendas desde Odoo y mantiene actualizadas las fechas de último pedido.</p>
 
         <form method="POST">
             <?php wp_nonce_field( 'aow_settings_nonce' ); ?>
+
             <h2>Credenciales Odoo</h2>
             <table class="form-table">
                 <tr>
@@ -67,26 +79,47 @@ function aow_settings_page() {
                         value="<?php echo esc_attr( $settings['api_key'] ?? '' ); ?>"></td>
                 </tr>
             </table>
+
             <p class="submit">
-                <button type="submit" name="aow_guardar" class="button button-primary">Guardar configuración</button>
-                <button type="submit" name="aow_sync_manual" class="button"
-                    onclick="return confirm('¿Ejecutar sincronización ahora?')">
-                    Ejecutar sincronización ahora
+                <button type="submit" name="aow_guardar" class="button button-primary">
+                    Guardar configuración
                 </button>
+            </p>
+
+            <hr>
+            <h2>Acciones</h2>
+            <p>
+                <button type="submit" name="aow_importar" class="button button-primary"
+                    onclick="return confirm('Esto importará todas las tiendas de Odoo y mandará a papelera las que ya no existan. ¿Continuar?')">
+                    Importar tiendas desde Odoo
+                </button>
+                &nbsp;
+                <button type="submit" name="aow_revision" class="button"
+                    onclick="return confirm('¿Ejecutar revisión diaria ahora?')">
+                    Ejecutar revisión diaria
+                </button>
+            </p>
+            <p style="color:#666; font-size:13px;">
+                <strong>Importar tiendas desde Odoo:</strong> obtiene todas las tiendas con categoría "TIENDA" en Odoo,
+                crea o actualiza las que tienen pedidos de menos de 1 año, y manda a papelera las que ya no existen.<br>
+                <strong>Revisión diaria:</strong> revisa las tiendas existentes en WordPress y elimina definitivamente las que superan 1 año sin pedidos.
             </p>
         </form>
 
         <hr>
         <h2>Último resultado</h2>
         <?php if ( $ultimo ) : ?>
-            <p><strong>Fecha:</strong> <?php echo esc_html( $ultimo['fecha'] ); ?></p>
+            <p>
+                <strong>Fecha:</strong> <?php echo esc_html( $ultimo['fecha'] ); ?>
+                &nbsp;|&nbsp;
+                <strong>Tipo:</strong> <?php echo esc_html( $ultimo['tipo'] ?? '-' ); ?>
+            </p>
             <p><strong>Resumen:</strong> <?php echo esc_html( $ultimo['mensaje'] ); ?></p>
 
             <?php if ( ! empty( $ultimo['detalle'] ) ) : ?>
                 <table class="widefat" style="margin-top:10px;">
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Tienda</th>
                             <th>Acción</th>
                             <th>Detalle</th>
@@ -95,7 +128,6 @@ function aow_settings_page() {
                     <tbody>
                         <?php foreach ( $ultimo['detalle'] as $fila ) : ?>
                             <tr style="background:<?php echo esc_attr( $colores[ $fila['accion'] ] ?? '#fff' ); ?>">
-                                <td><?php echo esc_html( $fila['id'] ); ?></td>
                                 <td><?php echo esc_html( $fila['nombre'] ); ?></td>
                                 <td><?php echo esc_html( $fila['accion'] ); ?></td>
                                 <td><?php echo esc_html( $fila['detalle'] ); ?></td>
@@ -105,7 +137,7 @@ function aow_settings_page() {
                 </table>
             <?php endif; ?>
         <?php else : ?>
-            <p>Aún no se ha ejecutado ninguna sincronización.</p>
+            <p>Aún no se ha ejecutado ninguna acción.</p>
         <?php endif; ?>
     </div>
     <?php
