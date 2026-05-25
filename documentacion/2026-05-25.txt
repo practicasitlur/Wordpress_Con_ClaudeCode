@@ -72,3 +72,17 @@
    - Actualizado id_odoo_tienda de la tienda de prueba (ID 4079) con el partner real de Odoo (ID 7804).
    - Plugin activado y sincronización probada: tienda actualizada correctamente con fecha 20260326.
 ========================================
+
+========================================
+1. FECHA Y HORA: 2026-05-25 13:00
+2. PREGUNTA / ORDEN RECIBIDA:
+   Rediseño del plugin: importación completa desde Odoo con reset, revisión diaria con borrado definitivo.
+3. CAMBIOS REALIZADOS:
+   - Corregido post_type de 'tiendas' a 'tienda' (el real en WordPress).
+   - Corregidos meta_keys: tienda_id, tienda_direccion, tienda_telefono (antes incorrectos).
+   - run_full_import(): obtiene todos los contactos con categoría "TIENDA" en Odoo, importa los que tienen pedidos de menos de 1 año, elimina definitivamente todas las demás tiendas de WordPress.
+   - run(): revisión diaria que elimina definitivamente tiendas con último pedido > 1 año y actualiza fecha_ultimo_pedido en las demás.
+   - Panel actualizado con dos botones separados: "Importar tiendas desde Odoo" y "Ejecutar revisión diaria".
+   - Verificado con 8 tiendas importadas correctamente de las 16 totales en Odoo.
+   - Actualizado proyecto-integracion-wordpress-odoo.md con documentación completa.
+========================================
