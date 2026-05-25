@@ -1,0 +1,5 @@
+# Archivos grandes — excluidos de git
+*.msi
+*.exe
+*.zip
+*.tar.gz

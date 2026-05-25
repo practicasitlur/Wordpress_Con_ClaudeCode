@@ -23,15 +23,39 @@
 
 ---
 
-## Carpeta API — Integración Odoo → WordPress
+## Arquitectura de integración Odoo ↔ WordPress
 
-La carpeta `./API` contiene todo lo relacionado con la sincronización de datos desde **Odoo** hacia **WordPress** mediante la REST API.
+La integración usa **dos plugins independientes**, cada uno con una dirección de flujo distinta.
 
-- **`conexion-api-odoo-wordpress/`** — Junction NTFS que apunta al plugin activo en el servidor local (`wp-content/plugins/integracion-oddo`). Editar aquí afecta directamente al plugin.
-  - **`conectar_API.php`** — Lógica del endpoint `POST /wp-json/odoo/v1/tiendas`: valida el token `X-Odoo-Token`, busca o crea un post de tipo `tiendas` y guarda los campos ACF.
-- **`proyecto-integracion-odoo-wp.md`** — Documento de contexto completo: arquitectura, plan de desarrollo en 5 pasos e instrucciones para la IA.
+---
 
-> Para trabajar en esta integración, editar únicamente dentro de `conexion-api-odoo-wordpress/`. No tocar archivos del tema hijo para lógica de APIs.
+### Plugin 1 — `API WORDPRESS-ODOO` (WordPress recibe datos de Odoo)
+
+**Flujo:** Odoo → WordPress (Odoo empuja datos, WordPress los almacena)
+
+- **Carpeta del proyecto:** `./API WORDPRESS-ODOO/`
+- **Junction al plugin activo:** `./API WORDPRESS-ODOO/conexion-api-wordpress-odoo/` → `wp-content/plugins/API WORDPRESS-ODOO`
+- **Carpeta de pruebas:** `./API WORDPRESS-ODOO/pruebas/`
+- **Documentación:** `./API WORDPRESS-ODOO/proyecto-integracion-odoo-wp.md`
+
+Expone un endpoint en WordPress al que Odoo envía datos (tiendas, caterings, etc.) para crearlos o actualizarlos.
+
+---
+
+### Plugin 2 — `API ODOO-WORDPRESS` (Odoo consulta WordPress)
+
+**Flujo:** Odoo → WordPress (Odoo hace peticiones, WordPress responde con datos)
+
+- **Carpeta del proyecto:** `./API ODOO-WORDPRESS/`
+- **Junction al plugin activo:** `./API ODOO-WORDPRESS/conexion-api-odoo-wordpress/` → `wp-content/plugins/API ODOO-WORDPRESS`
+- **Carpeta de pruebas:** `./API ODOO-WORDPRESS/pruebas/`
+- **Documentación:** `./API ODOO-WORDPRESS/proyecto-integracion-wordpress-odoo.md`
+
+Expone endpoints REST en WordPress para que Odoo pueda leer datos (GET, POST, PUT, DELETE). Autenticación por API Key (`X-API-Key`) con opción de whitelist de IPs.
+
+---
+
+> Para trabajar en cualquiera de los dos plugins, editar únicamente dentro de su carpeta correspondiente. No tocar archivos del tema hijo para lógica de APIs.
 
 ---
 

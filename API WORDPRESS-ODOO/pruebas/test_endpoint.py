@@ -24,7 +24,7 @@ try:
     r = requests.post(
         URL,
         json={
-            "odoo_id":   "TEST-CACERES-001",
+            "odoo_id":   "TEST-CACERES-002",
             "nombre":    "Café de Cáceres",
             "direccion": "Plaza Mayor 3, Cáceres",
             "telefono":  "927000000",
