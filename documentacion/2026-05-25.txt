@@ -86,3 +86,20 @@
    - Verificado con 8 tiendas importadas correctamente de las 16 totales en Odoo.
    - Actualizado proyecto-integracion-wordpress-odoo.md con documentación completa.
 ========================================
+
+========================================
+1. FECHA Y HORA: 2026-05-25 16:00
+2. PREGUNTA / ORDEN RECIBIDA:
+   Implementar el flujo inverso (Odoo → WordPress): al crear/modificar contacto TIENDA, al cambiar el flag "mostrar en web" y al confirmar presupuestos. Crear módulo de Odoo y endpoint de borrado en WordPress.
+3. CAMBIOS REALIZADOS:
+   - Creada junction "odoo codigo" apuntando a C:\Users\usuario\Documents\lur\locopolo-development para poder explorar el código de Odoo desde el proyecto.
+   - Movido el token hardcodeado del plugin API WORDPRESS-ODOO a wp_options (clave 'aow_odoo_token') con fallback al valor por defecto.
+   - Añadido endpoint DELETE /wp-json/odoo/v1/tiendas en API WORDPRESS-ODOO.php: recibe odoo_id, busca por meta tienda_id y elimina la tienda con wp_delete_post($id, true).
+   - Creado módulo de Odoo locopolo_wordpress_sync (carpeta en locopolo-development/locopolo_wordpress_sync/) con:
+     * __manifest__.py: depends de base y sale, versión 18.0.1.0.0.
+     * models/wordpress_client.py: cliente HTTP que lee URL y token de ir.config_parameter (claves locopolo_wordpress.url y locopolo_wordpress.token); métodos upsert_tienda() y delete_tienda(); logging de errores sin interrumpir flujo de Odoo.
+     * models/res_partner.py: campo booleano mostrar_en_web (default True), campo computado es_tienda; sobrescribe create() para enviar a WordPress si es TIENDA + mostrar_en_web + tiene pedido < 1 año; sobrescribe write() para detectar cambios (mostrar_en_web True→False elimina, False→True envía si pedido reciente, cambio de datos relevantes actualiza); sobrescribe unlink() para eliminar de WordPress.
+     * models/sale_order.py: sobrescribe action_confirm() para enviar datos del partner a WordPress si es TIENDA con mostrar_en_web activo.
+     * views/res_partner_views.xml: añade el toggle mostrar_en_web debajo de Categorías, visible solo cuando es_tienda = True.
+   - Documentación: creado API WORDPRESS-ODOO/proyecto-integracion-odoo-wp.md actualizado y nuevo locopolo_wordpress_sync/README.md con detalles del módulo.
+========================================

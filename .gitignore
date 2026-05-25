@@ -7,3 +7,6 @@
 # Credenciales — nunca subir a GitHub
 .env
 *.env
+
+# Junction al repositorio de Odoo (vive en otro repo)
+odoo codigo/

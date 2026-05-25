@@ -71,10 +71,46 @@ function diagnostico_odoo(WP_REST_Request $request) {
     ), 200 );
 }
 
+// Endpoint de borrado: DELETE /wp-json/odoo/v1/tiendas
+add_action('rest_api_init', function () {
+    register_rest_route('odoo/v1', '/tiendas', array(
+        'methods'             => 'DELETE',
+        'callback'            => 'eliminar_tienda_desde_odoo',
+        'permission_callback' => 'validar_token_odoo',
+    ));
+});
+
+function eliminar_tienda_desde_odoo(WP_REST_Request $request) {
+    $params  = $request->get_json_params();
+    $odoo_id = sanitize_text_field( $params['odoo_id'] ?? '' );
+
+    if ( ! $odoo_id ) {
+        return new WP_REST_Response( array( 'status' => 'error', 'message' => 'odoo_id requerido' ), 400 );
+    }
+
+    $posts = get_posts( array(
+        'post_type'      => 'tienda',
+        'post_status'    => array( 'publish', 'draft', 'private' ),
+        'posts_per_page' => 1,
+        'meta_query'     => array( array(
+            'key'   => 'tienda_id',
+            'value' => (string) $odoo_id,
+        ) ),
+    ) );
+
+    if ( empty( $posts ) ) {
+        return new WP_REST_Response( array( 'status' => 'not_found', 'message' => 'Tienda no encontrada' ), 404 );
+    }
+
+    wp_delete_post( $posts[0]->ID, true );
+
+    return new WP_REST_Response( array( 'status' => 'success', 'message' => 'Tienda eliminada' ), 200 );
+}
+
 // 2. Función de Seguridad: Validar que realmente es tu Odoo quien llama
 function validar_token_odoo(WP_REST_Request $request) {
     $token_recibido = $request->get_header('X-Odoo-Token');
-    $token_secreto  = 'MI_SUPER_TOKEN_SECRETO_12345'; // Cambia esto por algo seguro
+    $token_secreto  = get_option( 'aow_odoo_token', 'MI_SUPER_TOKEN_SECRETO_12345' );
     return $token_recibido === $token_secreto;
 }
 

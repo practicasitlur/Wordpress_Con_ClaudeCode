@@ -1,95 +1,150 @@
-# Proyecto: Integración API Odoo → WordPress
+# Plugin: API WORDPRESS-ODOO
 
-## 1. Contexto del Proyecto
+## ¿Para qué sirve?
 
-Este documento describe la arquitectura y el plan de desarrollo para sincronizar datos desde **Odoo** hacia **WordPress (Locopolo)** a través de la WordPress REST API.
+Este plugin permite que **Odoo llame a WordPress** para mantener sincronizadas las tiendas. WordPress actúa como **servidor** y expone endpoints REST que Odoo consume.
 
-El objetivo es que, cuando se actualice un registro en Odoo (p. ej. una tienda cliente), se envíe automáticamente a WordPress y se guarde como un Custom Post Type con sus campos ACF.
+```
+Odoo (cliente)  →  petición HTTP  →  WordPress (este plugin)
+```
+
+Es el complemento al plugin `API ODOO-WORDPRESS`, que hace el flujo inverso (WordPress consulta a Odoo).
 
 ---
 
-## 2. Estructura de Archivos
+## ¿Qué problema resuelve?
 
-```
-wordpress/
-└── API WORDPRESS-ODOO/                    ← carpeta raíz de esta integración
-    ├── proyecto-integracion-odoo-wp.md    ← este archivo
-    ├── conexion-api-odoo-wordpress/       ← junction NTFS al plugin activo (NO tocar la carpeta en sí)
-    │   └── integracion-oddo.php          ← lógica del endpoint (editar aquí)
-    └── pruebas/                           ← scripts de prueba, FUERA del junction
-        └── test_endpoint.py
-```
-
-**Ruta real del plugin en el servidor local:**
-```
-C:\Users\usuario\Local Sites\locopolo-local\app\public\wp-content\plugins\integracion-oddo\
-```
-
-> `conexion-api-odoo-wordpress` es un junction NTFS que apunta directamente a esa carpeta.
-> Editar los archivos dentro del junction equivale a editar el plugin en vivo.
-> La carpeta `pruebas` está **fuera** del junction a propósito: los scripts de test
-> no deben formar parte del plugin desplegado.
+Que los cambios hechos en Odoo (alta de tienda, cambio de datos, confirmación de pedido, desactivar publicación en web, baja de contacto) se reflejen automáticamente en WordPress sin intervención humana.
 
 ---
 
-## 3. Endpoint Registrado
+## Endpoints expuestos
 
-| Campo       | Valor                              |
-|-------------|------------------------------------|
-| Método      | `POST`                             |
-| URL         | `/wp-json/odoo/v1/tiendas`         |
-| Header auth | `X-Odoo-Token: <token_secreto>`    |
-| Body        | JSON con `odoo_id`, `nombre`, `direccion`, `telefono` |
+Todos los endpoints requieren el header `X-Odoo-Token` con el valor configurado en `wp_options` (clave `aow_odoo_token`).
 
-**Lógica del endpoint (`integracion-oddo.php`):**
-1. Valida el token de cabecera `X-Odoo-Token`.
-2. Busca si ya existe un post de tipo `tiendas` con el `id_odoo_tienda` recibido.
+### `POST /wp-json/odoo/v1/tiendas`
+
+Crea o actualiza una tienda en WordPress.
+
+**Body (JSON):**
+```json
+{
+  "odoo_id": 1234,
+  "nombre": "Tienda Ejemplo",
+  "direccion": "Calle Mayor 1",
+  "ciudad": "Madrid",
+  "telefono": "600000000",
+  "zona": "Madrid",
+  "tipo": "",
+  "fecha_ultimo_pedido": "20260520"
+}
+```
+
+**Respuesta correcta:**
+```json
+{
+  "status": "success",
+  "wp_post_id": 4079,
+  "post_title": "Tienda Ejemplo",
+  "post_type": "tienda",
+  "wpml_lang": "es",
+  "zona": "Madrid",
+  "tipo": "no enviado"
+}
+```
+
+**Lógica:**
+1. Valida `X-Odoo-Token`.
+2. Busca un post `tienda` con `tienda_id = odoo_id` en el meta.
 3. Si existe → `wp_update_post`. Si no → `wp_insert_post`.
-4. Guarda campos ACF: `id_odoo_tienda`, `direccion_tienda`, `telefono_tienda`.
-5. Devuelve `{"status": "success", "wp_post_id": <id>}` o un error 500.
+4. Asigna el idioma por defecto vía WPML.
+5. Guarda los campos ACF: `tienda_id`, `tienda_direccion`, `tienda_ciudad`, `tienda_telefono`.
+6. Asigna taxonomías `zona` y `tipo-tienda`.
 
 ---
 
-## 4. Plan de Desarrollo en 5 Pasos
+### `DELETE /wp-json/odoo/v1/tiendas`
 
-### Paso 1 — Plugin activo en WordPress local
-- El plugin `integracion-oddo` ya existe en el servidor local.
-- El archivo principal del plugin debe registrar el endpoint con `add_action('rest_api_init', ...)`.
-- Verificar que esté **activado** desde el panel de WordPress (`/wp-admin/plugins.php`).
+Elimina definitivamente una tienda en WordPress.
 
-### Paso 2 — Aislamiento: probar el endpoint de WordPress
-Simular llamadas como si fuera Odoo, usando Python o Postman:
-```python
-import requests
-
-url = "http://locopolo-local.local/wp-json/odoo/v1/tiendas"
-headers = {"X-Odoo-Token": "MI_SUPER_TOKEN_SECRETO_12345", "Content-Type": "application/json"}
-payload = {"odoo_id": "TEST-001", "nombre": "Tienda Prueba", "direccion": "Calle Mayor 1", "telefono": "600000000"}
-
-r = requests.post(url, json=payload, headers=headers)
-print(r.status_code, r.json())
+**Body (JSON):**
+```json
+{ "odoo_id": 1234 }
 ```
-Probar también con un token incorrecto para verificar que devuelve `403 Forbidden`.
 
-### Paso 3 — Aislamiento: configurar el emisor en Odoo
-- Crear el trigger/script en Python dentro de la instancia de Odoo (copia de base de datos).
-- El script debe construir el payload y llamar al endpoint de WordPress cuando cambie un registro.
+**Respuesta:**
+- `200 success` — tienda eliminada
+- `404 not_found` — no existe en WordPress
+- `400 error` — falta `odoo_id`
 
-### Paso 4 — Despliegue a Staging
-- Subir el plugin `integracion-oddo` al WordPress de staging en WP Engine.
-- URL de staging: `https://locopolostg.wpenginepowered.com/`
-- Verificar que el endpoint responde igual que en local.
-
-### Paso 5 — Prueba E2E
-- Lanzar la sincronización desde la copia de Odoo apuntando al WordPress de staging.
-- Confirmar que los posts de tipo `tiendas` se crean/actualizan correctamente con sus campos ACF.
+Internamente hace `wp_delete_post($id, true)` (sin papelera).
 
 ---
 
-## 5. Instrucciones para Claude Code
+### `GET /wp-json/odoo/v1/diagnostico`
 
-- **Editar únicamente** dentro del plugin `integracion-oddo` (accesible vía `conexion-api-odoo-wordpress/`). No tocar archivos del tema hijo para lógica de APIs.
-- **Sanitizar siempre** las entradas con `sanitize_text_field()` antes de usarlas.
-- **Comprobar errores** de `wp_insert_post` / `wp_update_post` con `is_wp_error()` antes de llamar a `update_field()`.
-- **Sin librerías externas**: usar únicamente funciones nativas de WordPress y PHP (arrays nativos para mapeo JSON, no frameworks de serialización).
-- El token secreto `MI_SUPER_TOKEN_SECRETO_12345` es provisional. Sustituirlo por una constante definida en `wp-config.php` antes de subir a producción.
+Endpoint de diagnóstico para inspeccionar el estado de WordPress: lista los `post_type` que existen, muestra ejemplos de posts que parecen tiendas y devuelve los `meta_keys` usados. Útil al integrar para confirmar nombres reales.
+
+---
+
+## Seguridad
+
+- Autenticación por **token** en el header `X-Odoo-Token`.
+- Token almacenado en `wp_options` bajo la clave `aow_odoo_token` (configurable sin tocar código).
+- Por ahora hay un valor por defecto hardcodeado como fallback (`MI_SUPER_TOKEN_SECRETO_12345`). **Cambiar antes de producción.**
+- Comunicación solo por HTTPS en producción (en local da igual).
+
+Para cambiar el token desde WordPress:
+```php
+update_option('aow_odoo_token', 'tu-token-seguro-aqui');
+```
+
+---
+
+## Estructura de archivos
+
+```
+API WORDPRESS-ODOO/
+├── proyecto-integracion-odoo-wp.md    ← este archivo
+├── conexion-api-wordpress-odoo/       ← junction NTFS al plugin activo
+│   └── API WORDPRESS-ODOO.php         ← endpoints y lógica
+└── pruebas/                           ← fuera del junction (no se despliega)
+    └── test_endpoint.py
+```
+
+La carpeta `conexion-api-wordpress-odoo/` es un junction NTFS hacia:
+```
+C:\Users\usuario\Local Sites\locopolo-local\app\public\wp-content\plugins\API WORDPRESS-ODOO
+```
+
+Editar dentro del junction equivale a editar el plugin en vivo.
+
+---
+
+## Cómo lo llama Odoo
+
+El módulo **`locopolo_wordpress_sync`** del lado Odoo (en `locopolo-development/`) es quien consume estos endpoints. Ver su documentación:
+- `locopolo-development/locopolo_wordpress_sync/README.md`
+
+Los eventos en Odoo que disparan llamadas a estos endpoints:
+
+| Evento Odoo | Endpoint llamado |
+|---|---|
+| Crear contacto TIENDA con `mostrar_en_web = True` y pedido < 1 año | `POST /tiendas` |
+| Modificar contacto TIENDA (nombre, dirección, teléfono, etc.) | `POST /tiendas` |
+| `mostrar_en_web` cambia de False a True con pedido reciente | `POST /tiendas` |
+| Confirmar presupuesto de un contacto TIENDA con `mostrar_en_web = True` | `POST /tiendas` |
+| `mostrar_en_web` cambia de True a False | `DELETE /tiendas` |
+| Eliminar contacto TIENDA en Odoo | `DELETE /tiendas` |
+
+---
+
+## Estado del desarrollo
+
+- [x] Endpoint POST de crear/actualizar tienda
+- [x] Endpoint DELETE de eliminar tienda
+- [x] Endpoint GET de diagnóstico
+- [x] Token configurable vía `wp_options`
+- [x] Soporte WPML (asignación de idioma por defecto)
+- [ ] Panel de administración para cambiar el token desde WordPress (no urgente; se puede usar `update_option`)
+- [ ] Logging de llamadas recibidas en `wp_options` o tabla propia (no urgente)
