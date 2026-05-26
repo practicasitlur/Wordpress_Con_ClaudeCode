@@ -29,29 +29,33 @@ La integración usa **dos plugins independientes**, cada uno con una dirección 
 
 ---
 
-### Plugin 1 — `API WORDPRESS-ODOO` (Odoo llama a WordPress)
+### Plugin 1 — `API odoo-llama-a-wordpress` (Odoo llama a WordPress)
 
 **Flujo:** Odoo llama a WordPress. WordPress es el servidor que expone endpoints.
 
-- **Carpeta del proyecto:** `./API WORDPRESS-ODOO/`
-- **Junction al plugin activo:** `./API WORDPRESS-ODOO/conexion-api-wordpress-odoo/` → `wp-content/plugins/API WORDPRESS-ODOO`
-- **Carpeta de pruebas:** `./API WORDPRESS-ODOO/pruebas/`
-- **Documentación:** `./API WORDPRESS-ODOO/proyecto-integracion-odoo-wp.md`
+- **Carpeta del proyecto:** `./API odoo-llama-a-wordpress/`
+- **Junction al plugin activo:** `./API odoo-llama-a-wordpress/conexion-api-wordpress-odoo/` → `wp-content/plugins/API WORDPRESS-ODOO`
+- **Carpeta de pruebas:** `./API odoo-llama-a-wordpress/pruebas/`
+- **Documentación:** `./API odoo-llama-a-wordpress/proyecto-integracion-odoo-wp.md`
 
 Expone endpoints REST en WordPress para que Odoo pueda enviar o consultar datos.
 
+> Nota: la carpeta del plugin activo en `wp-content/plugins/` y los nombres internos (clases, archivos PHP) conservan el nombre original `API WORDPRESS-ODOO`. Solo se ha renombrado la carpeta contenedora del proyecto para que el flujo quede claro al leerlo.
+
 ---
 
-### Plugin 2 — `API ODOO-WORDPRESS` (WordPress llama a Odoo)
+### Plugin 2 — `API wordpress-llama-a-odoo` (WordPress llama a Odoo)
 
 **Flujo:** WordPress llama a Odoo. Odoo es el servidor que expone endpoints.
 
-- **Carpeta del proyecto:** `./API ODOO-WORDPRESS/`
-- **Junction al plugin activo:** `./API ODOO-WORDPRESS/conexion-api-odoo-wordpress/` → `wp-content/plugins/API ODOO-WORDPRESS`
-- **Carpeta de pruebas:** `./API ODOO-WORDPRESS/pruebas/`
-- **Documentación:** `./API ODOO-WORDPRESS/proyecto-integracion-wordpress-odoo.md`
+- **Carpeta del proyecto:** `./API wordpress-llama-a-odoo/`
+- **Junction al plugin activo:** `./API wordpress-llama-a-odoo/conexion-api-odoo-wordpress/` → `wp-content/plugins/API ODOO-WORDPRESS`
+- **Carpeta de pruebas:** `./API wordpress-llama-a-odoo/pruebas/`
+- **Documentación:** `./API wordpress-llama-a-odoo/proyecto-integracion-wordpress-odoo.md`
 
 WordPress actúa como cliente: hace peticiones a la API de Odoo y actúa en función de la respuesta. Autenticación por API Key compartida entre ambos sistemas.
+
+> Nota: la carpeta del plugin activo en `wp-content/plugins/` y los nombres internos conservan el nombre original `API ODOO-WORDPRESS`. Solo se ha renombrado la carpeta contenedora del proyecto.
 
 ---
 

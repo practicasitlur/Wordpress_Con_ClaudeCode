@@ -106,6 +106,71 @@ El panel muestra el resultado de la última ejecución con una tabla coloreada:
 
 ---
 
+## Pruebas
+
+La carpeta `pruebas/` contiene scripts Python que permiten verificar el flujo Odoo → WordPress sin depender de tener pedidos reales recientes.
+
+### Requisitos
+
+- Python 3 instalado
+- Archivo `.env` relleno con `ODOO_URL`, `ODOO_DB`, `ODOO_USERNAME`, `ODOO_API_KEY`
+- Librerías Python instaladas:
+  ```bash
+  pip install requests python-dotenv
+  ```
+
+### Scripts disponibles
+
+Todos se ejecutan desde la raíz del proyecto wordpress.
+
+#### `buscar_tiendas_antiguas.py` — diagnóstico
+
+Lista todas las tiendas (partners con categoría `TIENDA`) en Odoo y muestra el estado de su último pedido. Útil para elegir una buena candidata para pruebas.
+
+```bash
+python "API ODOO-WORDPRESS/pruebas/buscar_tiendas_antiguas.py"
+```
+
+Salida: tabla con `ID | NOMBRE | ULTIMO PEDIDO | ESTADO` (reciente / >1 año / SIN PEDIDOS), seguida de una lista de candidatas para pruebas.
+
+#### `crear_pedido_prueba.py` — añadir tienda al import
+
+Crea un pedido en Odoo para una tienda y lo confirma. Tras ejecutarlo, esa tienda tendrá un pedido reciente y será importable.
+
+```bash
+python "API ODOO-WORDPRESS/pruebas/crear_pedido_prueba.py"
+```
+
+Por defecto el script usa el partner_id `7918` (LUISA MARIA ZUIN). Cambiar la constante `PARTNER_ID` en el script para usar otra tienda.
+
+#### `eliminar_pedido_prueba.py` — revertir el pedido
+
+Elimina el último pedido confirmado del partner. Secuencia interna: `action_unlock` → `action_cancel` → `write state=draft` → `unlink`.
+
+```bash
+python "API ODOO-WORDPRESS/pruebas/eliminar_pedido_prueba.py"
+```
+
+### Flujo de prueba completo
+
+```
+1. python crear_pedido_prueba.py
+   → se crea y confirma un pedido en Odoo
+
+2. WordPress → menú "Sync Odoo" → botón "Importar tiendas desde Odoo"
+   → la tienda aparece en WordPress
+
+3. python eliminar_pedido_prueba.py
+   → se elimina el pedido en Odoo
+
+4. WordPress → "Importar tiendas desde Odoo" otra vez
+   → la tienda desaparece de WordPress
+```
+
+> **Importante:** los scripts solo modifican Odoo. WordPress no se sincroniza automáticamente. Es necesario pulsar "Importar tiendas desde Odoo" en el panel admin para que el cambio se refleje. El cron diario solo revisa tiendas ya existentes — no importa tiendas nuevas.
+
+---
+
 ## Estado del desarrollo
 
 - [x] Conexión con Odoo verificada
@@ -114,5 +179,6 @@ El panel muestra el resultado de la última ejecución con una tabla coloreada:
 - [x] Mapeo de campos Odoo → WordPress
 - [x] Asignación de taxonomía `zona`
 - [x] Panel de administración con log de resultados
-- [ ] Actualización en tiempo real al crear/modificar pedido en Odoo (pendiente)
-- [ ] Actualización en tiempo real al crear/eliminar tienda en Odoo (pendiente)
+- [x] Scripts de prueba para validar el flujo
+- [ ] Actualización en tiempo real al crear/modificar pedido en Odoo (pendiente — lo hará el módulo Odoo `locopolo_wordpress_sync`)
+- [ ] Actualización en tiempo real al crear/eliminar tienda en Odoo (pendiente — lo hará el módulo Odoo `locopolo_wordpress_sync`)

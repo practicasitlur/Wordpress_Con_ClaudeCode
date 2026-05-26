@@ -1,0 +1,49 @@
+========================================
+1. FECHA Y HORA: 2026-05-26 09:31
+2. PREGUNTA / ORDEN RECIBIDA:
+   Comprobar si la web de staging (locopolostg.wpenginepowered.com) funciona. Estaba rota (pantalla en blanco) y el usuario intentó arreglarla subiendo un backup desde local.
+3. CAMBIOS REALIZADOS:
+   - Diagnosticado el estado de staging: HTTP 200 OK pero el frontend devolvía 0 bytes (clásico "white screen of death" de WordPress por fatal PHP silenciado).
+   - Verificado que el WordPress core funcionaba: /wp-json/ respondía correctamente (devolvía nombre del sitio, namespaces, timezone Europe/Madrid) y /wp-login.php cargaba normal (16 KB). Solo el frontend renderizado por el tema crasheaba.
+   - El usuario hizo un primer "Restore" en staging desde el wp-admin con WPvivid usando un backup, que rompió el sitio (probablemente por fallo a mitad del proceso: timeout PHP, corte de conexión o memoria agotada, dejando la BD parcialmente importada).
+   - El usuario subió a staging un backup completo (Database + Files) generado en local con WPvivid Backup Plugin.
+   - El usuario hizo un segundo "Restore" en staging con el mismo backup desde el wp-admin. Esta vez se completó correctamente y el sitio volvió a funcionar.
+   - Resultado final: staging tiene ahora una copia exacta del WordPress local del usuario (la BD y archivos de staging anteriores quedaron sobreescritos).
+   - Conclusión técnica: las restauraciones de WPvivid sobre WP Engine pueden fallar a la mitad sin dejar mensaje de error claro. Regla práctica: no dar por buena una restauración hasta ver el mensaje explícito "Migration/Restore completed successfully". Si no aparece, relanzar.
+========================================
+
+========================================
+1. FECHA Y HORA: 2026-05-26 09:55
+2. PREGUNTA / ORDEN RECIBIDA:
+   Probar la conexión Odoo → WordPress creando un pedido nuevo en una tienda con último pedido de más de 1 año, y luego revertirlo. Validar que aparece y desaparece al importar.
+3. CAMBIOS REALIZADOS:
+   - Creado API ODOO-WORDPRESS/pruebas/buscar_tiendas_antiguas.py: lista las 16 tiendas con categoría TIENDA en Odoo y marca cuáles tienen último pedido > 1 año o ninguno. Identificadas 8 candidatas para pruebas.
+   - Creado API ODOO-WORDPRESS/pruebas/crear_pedido_prueba.py: crea y confirma un pedido en Odoo para LUISA MARIA ZUIN (partner_id 7918). Usa el primer producto vendible disponible. Tras confirmar, el partner queda con un pedido reciente y debería ser importable en WordPress.
+   - Creado API ODOO-WORDPRESS/pruebas/eliminar_pedido_prueba.py: revierte el cambio. Busca el último pedido confirmado del partner 7918 y lo elimina con la secuencia action_unlock → action_cancel → write state=draft → unlink.
+   - Verificado el flujo completo: ejecutar crear_pedido_prueba.py → click "Importar tiendas desde Odoo" en WordPress → LUISA MARIA ZUIN aparece como importada. Ejecutar eliminar_pedido_prueba.py → click "Importar tiendas desde Odoo" → LUISA MARIA ZUIN se elimina.
+   - Aclarado un punto importante: los scripts SOLO modifican Odoo. WordPress no se sincroniza automáticamente. Es necesario pulsar "Importar tiendas desde Odoo" para que el cambio se refleje. El cron diario solo revisa tiendas ya existentes (no importa nuevas).
+   - Actualizado API ODOO-WORDPRESS/proyecto-integracion-wordpress-odoo.md con una sección de "Pruebas" que explica los tres scripts y cómo ejecutarlos.
+
+   Cómo ejecutar los scripts (desde la raíz del proyecto wordpress):
+     - python "API ODOO-WORDPRESS/pruebas/buscar_tiendas_antiguas.py"
+     - python "API ODOO-WORDPRESS/pruebas/crear_pedido_prueba.py"
+     - python "API ODOO-WORDPRESS/pruebas/eliminar_pedido_prueba.py"
+
+   Requisitos:
+     - Tener Python 3 instalado.
+     - Tener el archivo .env relleno en API ODOO-WORDPRESS/.env con ODOO_URL, ODOO_DB, ODOO_USERNAME y ODOO_API_KEY.
+     - Tener instalada la librería requests y python-dotenv (pip install requests python-dotenv).
+========================================
+
+========================================
+1. FECHA Y HORA: 2026-05-26 10:04
+2. PREGUNTA / ORDEN RECIBIDA:
+   Los nombres de las carpetas API ODOO-WORDPRESS y API WORDPRESS-ODOO son ambiguos (no queda claro quién llama a quién). Renombrarlas para que el flujo se entienda al leer el nombre.
+3. CAMBIOS REALIZADOS:
+   - Renombrada la carpeta "API ODOO-WORDPRESS" a "API wordpress-llama-a-odoo" (WordPress llama a Odoo).
+   - Renombrada la carpeta "API WORDPRESS-ODOO" a "API odoo-llama-a-wordpress" (Odoo llama a WordPress).
+   - Verificado que las junctions internas siguen apuntando correctamente a las carpetas reales en wp-content/plugins/, que mantienen su nombre original (API ODOO-WORDPRESS y API WORDPRESS-ODOO).
+   - No se ha tocado nada dentro de las carpetas renombradas (plugins, clases PHP, junctions, archivos .md internos). Solo el nombre de la carpeta contenedora.
+   - Actualizado CLAUDE.md con las nuevas rutas y añadido en cada plugin una nota aclarando que la carpeta del plugin activo en wp-content/plugins/ conserva el nombre original.
+   - No se han actualizado las entradas históricas de documentacion/*.txt — quedan con los nombres antiguos como registro fiel del momento en que se hicieron.
+========================================
