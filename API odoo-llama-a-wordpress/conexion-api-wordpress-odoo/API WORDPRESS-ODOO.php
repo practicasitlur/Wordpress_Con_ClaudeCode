@@ -119,13 +119,15 @@ function recibir_tienda_desde_odoo(WP_REST_Request $request) {
     $parametros = $request->get_json_params();
 
     // Extraer datos del JSON de Odoo
-    $odoo_id   = sanitize_text_field($parametros['odoo_id']);
-    $nombre    = sanitize_text_field($parametros['nombre']);
-    $direccion = sanitize_text_field($parametros['direccion']);
-    $telefono  = sanitize_text_field($parametros['telefono']);
-    $zona      = sanitize_text_field($parametros['zona'] ?? '');
-    $tipo      = sanitize_text_field($parametros['tipo'] ?? '');
-    $ciudad    = sanitize_text_field($parametros['ciudad'] ?? '');
+    $odoo_id             = sanitize_text_field($parametros['odoo_id']);
+    $nombre              = sanitize_text_field($parametros['nombre']);
+    $direccion           = sanitize_text_field($parametros['direccion']);
+    $telefono            = sanitize_text_field($parametros['telefono']);
+    $zona                = sanitize_text_field($parametros['zona'] ?? '');
+    $tipo                = sanitize_text_field($parametros['tipo'] ?? '');
+    $ciudad              = sanitize_text_field($parametros['ciudad'] ?? '');
+    $codigo_postal       = sanitize_text_field($parametros['codigo_postal'] ?? '');
+    $fecha_ultimo_pedido = sanitize_text_field($parametros['fecha_ultimo_pedido'] ?? '');
 
     // Comprobar si esta tienda ya existe en WP para actualizarla, o crear una nueva
     $args = array(
@@ -183,7 +185,9 @@ function recibir_tienda_desde_odoo(WP_REST_Request $request) {
     // Aquí usamos ACF PRO para guardar los datos estructurados en sus cajones
     update_field('tienda_id', $odoo_id, $post_id);
     update_field('tienda_direccion', $direccion, $post_id);
-    if ( $ciudad ) { update_field('tienda_ciudad', $ciudad, $post_id); }
+    if ( $ciudad )              { update_field('tienda_ciudad', $ciudad, $post_id); }
+    if ( $codigo_postal )       { update_field('tienda_codigo_postal', $codigo_postal, $post_id); }
+    if ( $fecha_ultimo_pedido ) { update_field('fecha_ultimo_pedido', $fecha_ultimo_pedido, $post_id); }
     update_post_meta($post_id, 'tienda_telefono', $telefono);
 
     // Asignar taxonomias
