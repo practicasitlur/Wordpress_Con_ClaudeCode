@@ -47,3 +47,18 @@
    - Actualizado CLAUDE.md con las nuevas rutas y añadido en cada plugin una nota aclarando que la carpeta del plugin activo en wp-content/plugins/ conserva el nombre original.
    - No se han actualizado las entradas históricas de documentacion/*.txt — quedan con los nombres antiguos como registro fiel del momento en que se hicieron.
 ========================================
+
+========================================
+1. FECHA Y HORA: 2026-05-26 16:28
+2. PREGUNTA / ORDEN RECIBIDA:
+   Probar el flujo completo Odoo → WordPress con el módulo locopolo_wordpress_sync recién desplegado. Las tiendas AIBAK y "Oier usu prueba externo" no aparecían en /encuentranos/ de staging.
+3. CAMBIOS REALIZADOS:
+   - Configurados los parámetros del sistema en Odoo: locopolo_wordpress.url y locopolo_wordpress.token.
+   - Detectado y corregido en el módulo Odoo el bloqueo de Cloudflare/WP Engine que rechazaba peticiones con User-Agent "python-requests/X.X.X" (devolvía 403). Añadido User-Agent custom "LocopoloWordPressSync/1.0" en wordpress_client.py (push a rama development → rebuild Odoo.sh).
+   - Detectado un segundo bug, esta vez en el plugin de WordPress (API WORDPRESS-ODOO.php): las llamadas wp_set_object_terms($post_id, $zona, 'zona', false) con un string para taxonomías jerárquicas creaban un término DUPLICADO sin padre en vez de usar el existente. Provocaba que AIBAK y Oier (provincia "Gipuzkoa (Guipúzcoa)") acabaran en un término "Gipuzkoa" suelto, fuera de España, y por eso no aparecían en /encuentranos/.
+   - Aplicado fix en el plugin de WordPress directamente desde wp-admin → Plugins → Editor de archivos de plugin: ahora hace get_term_by('name', $zona, 'zona') y usa wp_set_post_terms con el term_id. Mismo fix para 'tipo-tienda'.
+   - Sincronizada la taxonomía 'zona' con la lista canónica de res.country.state de Odoo: creados 5 términos nuevos bajo España (Araba/Álava, Calvià, Leon, Palma de Mallorca, menorca; Alcudia ya existía) y eliminados los términos huérfanos "Araba (Álava)" antiguo (id 73) y "Gipuzkoa" duplicado (id 266) tras reasignar AIBAK al término correcto.
+   - Verificado que AIBAK, Oier y LUISA MARIA ZUIN aparecen ahora correctamente en /encuentranos/ con su zona asignada.
+   - PENDIENTE: aplicar el mismo fix del plugin en el archivo local (junction conexion-api-wordpress-odoo/API WORDPRESS-ODOO.php). Si en el futuro se hace otra Auto-Migration de local → staging, el bug volverá a aparecer porque el código local sigue con la versión antigua.
+   - Scripts añadidos en API wordpress-llama-a-odoo/pruebas/: verificar_token_odoo.py (lee el token en Odoo con repr para detectar caracteres invisibles), sync_zona_diff.py (compara terms de WP con lista de Odoo) y sync_zona_aplicar.py (crea/borra terms vía REST con la application password de idoia).
+========================================

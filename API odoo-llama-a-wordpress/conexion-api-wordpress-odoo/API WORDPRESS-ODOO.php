@@ -190,9 +190,20 @@ function recibir_tienda_desde_odoo(WP_REST_Request $request) {
     if ( $fecha_ultimo_pedido ) { update_field('fecha_ultimo_pedido', $fecha_ultimo_pedido, $post_id); }
     update_post_meta($post_id, 'tienda_telefono', $telefono);
 
-    // Asignar taxonomias
-    if ( $zona ) { wp_set_object_terms($post_id, $zona, 'zona', false); }
-    if ( $tipo ) { wp_set_object_terms($post_id, $tipo, 'tipo-tienda', false); }
+    // Asignar taxonomias — buscar el term existente por nombre y usar su ID
+    // (con un string suelto, wp_set_object_terms crea un term duplicado en taxonomias jerarquicas)
+    if ( $zona ) {
+        $term = get_term_by( 'name', trim( $zona ), 'zona' );
+        if ( $term ) {
+            wp_set_post_terms( $post_id, [ $term->term_id ], 'zona' );
+        }
+    }
+    if ( $tipo ) {
+        $term = get_term_by( 'name', trim( $tipo ), 'tipo-tienda' );
+        if ( $term ) {
+            wp_set_post_terms( $post_id, [ $term->term_id ], 'tipo-tienda' );
+        }
+    }
 
     return new WP_REST_Response(array(
         'status'          => 'success',
