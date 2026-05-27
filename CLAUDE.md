@@ -4,7 +4,7 @@
 - **local:** true
 - **API CLAUDE-WORDPRESS:** false
 - **Ruta del acceso directo en el proyecto:** `./tema-local`
-- **Ruta real del servidor local:** `C:\Users\usuario\Local Sites\locopolo-local\app\public\wp-content\themes\locopolo-understrap-child`
+- **Ruta real del servidor local:** `C:\Users\Lur\Local Sites\locopololocal\app\public\wp-content\themes\locopolo-understrap-child`
 
 ## Reglas de Entorno (OBLIGATORIO)
 - Como `local` es `true`, debes realizar todas las modificaciones de código directamente dentro de la carpeta `./tema-local` de este espacio de trabajo. Cualquier archivo PHP, CSS o JS que crees o edites ahí dentro impactará directamente en la web local.
@@ -34,7 +34,7 @@ La integración usa **dos plugins independientes**, cada uno con una dirección 
 **Flujo:** Odoo llama a WordPress. WordPress es el servidor que expone endpoints.
 
 - **Carpeta del proyecto:** `./API odoo-llama-a-wordpress/`
-- **Junction al plugin activo:** `./API odoo-llama-a-wordpress/conexion-api-wordpress-odoo/` → `wp-content/plugins/API WORDPRESS-ODOO`
+- **Junction al plugin activo:** `./API odoo-llama-a-wordpress/conexion-api-wordpress-odoo/` → `C:\Users\Lur\Local Sites\locopololocal\app\public\wp-content\plugins\API WORDPRESS-ODOO`
 - **Carpeta de pruebas:** `./API odoo-llama-a-wordpress/pruebas/`
 - **Documentación:** `./API odoo-llama-a-wordpress/proyecto-integracion-odoo-wp.md`
 
@@ -49,7 +49,7 @@ Expone endpoints REST en WordPress para que Odoo pueda enviar o consultar datos.
 **Flujo:** WordPress llama a Odoo. Odoo es el servidor que expone endpoints.
 
 - **Carpeta del proyecto:** `./API wordpress-llama-a-odoo/`
-- **Junction al plugin activo:** `./API wordpress-llama-a-odoo/conexion-api-odoo-wordpress/` → `wp-content/plugins/API ODOO-WORDPRESS`
+- **Junction al plugin activo:** `./API wordpress-llama-a-odoo/conexion-api-odoo-wordpress/` → `C:\Users\Lur\Local Sites\locopololocal\app\public\wp-content\plugins\API ODOO-WORDPRESS`
 - **Carpeta de pruebas:** `./API wordpress-llama-a-odoo/pruebas/`
 - **Documentación:** `./API wordpress-llama-a-odoo/proyecto-integracion-wordpress-odoo.md`
 
