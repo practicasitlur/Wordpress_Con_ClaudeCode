@@ -8,7 +8,7 @@
 .env
 *.env
 
-# Junction al repositorio de Odoo (vive en otro repo)
+# Junction al repositorio de Odoo (vive en otro repo 
 odoo codigo/
 
 # Junction a odoo_pruebas local (no subir a GitHub)
