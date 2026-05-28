@@ -2,7 +2,7 @@
 # para ejecutar: powershell -ExecutionPolicy Bypass -File .\push-odoo.ps1
 # Hace commit y push al repositorio de Odoo SIEMPRE en la rama DEVELOPMENT
 
-$repoPath = "C:\Users\Lur\Documents\lur\modulos_odoo"
+$repoPath = "C:\Users\Lur\Documents\lur\repositorio wordpress-odoo\tus_modulos"
 
 Set-Location $repoPath
 

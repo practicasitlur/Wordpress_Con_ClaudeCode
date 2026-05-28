@@ -10,3 +10,11 @@
 
 # Junction al repositorio de Odoo (vive en otro repo)
 odoo codigo/
+
+# Junction a odoo_pruebas local (no subir a GitHub)
+odoo local/
+
+# Junction al repositorio WordPress/Locopolo (vive en otro repo)
+tus_modulos/
+
+

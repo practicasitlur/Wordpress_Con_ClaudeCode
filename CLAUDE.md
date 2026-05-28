@@ -63,6 +63,12 @@ WordPress actúa como cliente: hace peticiones a la API de Odoo y actúa en func
 
 ---
 
+## Archivos INTOCABLES (OBLIGATORIO)
+
+- **`push-odoo.ps1`** — NUNCA modificar este archivo bajo ninguna circunstancia. Es el script de deploy al repositorio de Odoo y cualquier cambio podría romper el flujo de push a la rama `development`.
+
+---
+
 ## Reglas de documentación (OBLIGATORIO)
 Solo documentar cuando se haya realizado un cambio real en el sitio WordPress o en la configuración del proyecto. No registrar preguntas genéricas ni dudas.
 
